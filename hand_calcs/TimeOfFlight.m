@@ -1,4 +1,4 @@
-function [TOF] = TimeOfFlight(orbit,mu,final_nu,K)
+function [TOF] = TimeOfFlight(orbit,mu,final_nu,K,allow_negative)
 % Given an orbit, an initial and a final true anomaly, 
 %   what is the time of flight?
 %
@@ -14,17 +14,25 @@ function [TOF] = TimeOfFlight(orbit,mu,final_nu,K)
 % mu: gravitational parameter (km^3/s^2)
 % final_nu: final true anomaly (rad)
 % K: number of times that the object passes periapsis. Default 0.
+% allow_negative: Allow for a negative time of flight. Default 0 (no).
 %
 % OUTPUTS:
 % TOF: time of flight (seconds)
 
-if nargin < 4
-    K = 0;
+if nargin < 5
+    allow_negative = 0;
+    if nargin < 4
+        K = 0;
+    end
 end
 
-[~,~,M_0] = convert_anomalies(orbit.nu,orbit.ecc,"mean"); % Initial mean anomaly (rad)
-[~,~,M_f] = convert_anomalies(final_nu,orbit.ecc,"mean"); % Final mean anomaly (rad)
+[~,~,M_0] = convert_anomalies(orbit.nu,orbit.ecc,"true"); % Initial mean anomaly (rad)
+[~,~,M_f] = convert_anomalies(final_nu,orbit.ecc,"true"); % Final mean anomaly (rad)
 TOF = sqrt(orbit.sma^3/mu) * (2*pi*K + M_f - M_0); % Time of flight (sec)
-
+if ~allow_negative && TOF < 0
+    TP = sqrt(4*pi^2/mu * orbit.sma^3); % Orbital period (sec)
+    TOF = TOF + TP; % Time of flight going the long way around
+end
+    
 
 end
