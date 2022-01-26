@@ -1,7 +1,11 @@
-function [final_orbit,B_dot] = earth_grav_assist(initial_orbit, earth)
+function [final_orbit,B_dot,rp] = earth_grav_assist(initial_orbit, earth)
 % Construct an Earth gravity assist that changes the S/C heliocentric orbit
 % inclination to a desired value.
 % See info on B-plane targeting here: https://ai-solutions.com/_freeflyeruniversityguide/the_b_plane.htm
+%
+% NOTES:
+% Sometimes gives complex answers, at least when using with optimize_EGA.m
+% Add TOF as an output. Update TimeOfFlight.m to support hyperbolic trajectories
 %
 % INPUTS
 % initial_orbit: struct containing S/C heliocentric orbital elements at beginning of gravity assist.
@@ -19,6 +23,8 @@ function [final_orbit,B_dot] = earth_grav_assist(initial_orbit, earth)
 % OUTPUTS
 % final_orbit: struct (same fields as above) containing S/C heliocentric orbital elements after gravity assist
 % B_dot: Target vector [B_dot_T; B_dot_R] on the S/C B-plane during flyby
+% rp: Radius of perigee for hyperbolic trajectory (km)
+% TOF: Time of flight (sec) from starting position to final position
 %
 
 %% Constants
@@ -106,6 +112,6 @@ B_dot_R = dot(B_vec,R_hat); % B dot R, projection of B vector onto R axis
 B_dot = [B_dot_T; B_dot_R]; % B dot vector, defining the target point on the B-plane
 theta = acos(dot(B_vec,T_hat)./(norm(B_vec) * norm(T_hat))); % Vertex angle, defines the plane of the hyperbolic trajectory
 delta = pi - 2*beta; % angle (rad) between incoming and outgoing asymptotic velocities
-
+rp = sma * (1 - ecc); % Radius of perigee (km)
 
 end
