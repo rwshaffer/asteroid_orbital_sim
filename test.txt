@@ -1,0 +1,3 @@
+function [y] = mx(x, m, b)
+y = mx+b;
+end
