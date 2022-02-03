@@ -1,0 +1,3 @@
+juliandate(datetime(2021, 11, 4))
+
+converts from datetime to a julian date
