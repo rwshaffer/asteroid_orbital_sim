@@ -28,6 +28,14 @@ root.NewScenario('OrbitalSim')
 planet = root.CurrentScenario.Children.New('ePlanet', 'Jupiter');
 planet.CommonTasks.SetPositionSourceCentralBody('Jupiter', 'eEphemJPLDE');
 
+% IAgPlanet planet: Planet object
+planet2D = planet.Graphics;
+planet2D.Color = 255;   % Red
+planet2D.Inherit = false;
+planet2D.OrbitVisible = true;
+planet2D.SubPlanetPointVisible = false;
+planet2D.SubPlanetLabelVisible = false;
+
 %% 5. Insert satellite and configure some settings common to all simulations
 
 %- Turn off any unnecessary graphics to optimize sim. speed
