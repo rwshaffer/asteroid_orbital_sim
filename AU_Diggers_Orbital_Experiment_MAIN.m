@@ -25,7 +25,7 @@ root.NewScenario('OrbitalSim')
 
 %Initializing Jupiter as a test for how to create a planet
 % IAgScenario scenario: Scenario object
-planet = root.Children.New('ePlanet', 'Jupiter');
+planet = root.CurrentScenario.Children.New('ePlanet', 'Jupiter');
 planet.CommonTasks.SetPositionSourceCentralBody('Jupiter', 'eEphemJPLDE');
 
 %% 5. Insert satellite and configure some settings common to all simulations
