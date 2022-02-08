@@ -1,0 +1,68 @@
+
+1. User inputs/starting point
+- Trajectory type
+- Launch window
+- Engine parameters - thrust, Isp
+- Mining duration
+- Uncertainties (asteroid orbit)
+- NOTE: these can be single values, or vectors - run multiple sims in a row
+
+2. Use hand calculations to set initial guesses for satellite orbit based on inputs/traj. type
+- Discard the current iteration if the hand calcs show that the set of inputs given lead to horrible/impossible trajectories
+- e.g. "based on the launch window and mining duration given, the return delta-V will be roughly 30 km/s"
+
+3. Initialize STK instance/scenario
+- Allow for "finding" an open STK instance/scenario instead of creating a new one every time
+
+4. Populate simulation objects: Earth, asteroid, electric propulsion engine
+
+5. Insert satellite and configure some settings common to all simulations
+- Turn off any unnecessary graphics to optimize sim. speed
+
+6. Build MCS based on selected trajectory type
+OUTBOUND options:
+a. Hayabusa mission profile
+b. Earth escape direct to asteroid plane
+c. EGA to asteroid plane
+d. EGA in Earth plane to raise orbit
+e. Direct trajectory - solve Lambert's problem to get a direct impulsive transfer orbit, then adjust for low thrust
+RETURN options:
+f. direct return to Earth
+g. EGA to reduce speed, then return to Earth
+NOTE: current thought is that we can model Earth orbit after return in a different simulation outside of the experiment
+- Rationale: will only depend on arrival speed relative to Earth, none of the other parameters
+- Will never be able to get a lunar gravity assist to behave in an interplanetary simulation, way too many variables. Can just use a different sim. and assume that the Moon will be in the right place for a good gravity assist
+
+7. Run MCS and allow differential correctors to converge
+- What if they don't? Set an iteration limit/increase tolerances/other options
+- Want to look into other target sequence options. SNOPT optimizer is promising (used in STK L3 finite burn tutorial)
+
+8. Calculate and export outputs
+- Time of flight for each phase
+- Delta-V for each phase
+- Arrival speed at return to asteroid/Earth
+
+9. Save inputs/outputs to a spreadsheet or .mat file
+
+10. (OUTSIDE OF MAIN STK CODE STRUCTURE) process input/output data to determine optimal trajectories
+- Use weighting factors of outputs that were set last semester
+
+
+
+ASSIGNMENT BREAKDOWN:
+1. Terelle
+2. three/four people? Gen, Ryan, Febe, Nathaniel
+3. Alex
+4. Alex
+5. Alex
+6. a. Nathaniel
+   b. Alex/Gen
+   c. Ryan
+   d. Terelle/Ryan
+   e. Nathaniel
+   f. Gen
+   g. Febe/Ryan
+7. one/two Terelle
+8. __ Alex?
+9. Alex
+10. two/three? Terelle
