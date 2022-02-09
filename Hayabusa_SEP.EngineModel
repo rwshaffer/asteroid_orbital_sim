@@ -1,0 +1,50 @@
+<!-- STKv4.0 Format="XML" -->
+<STKOBJECT>
+<OBJECT Class = "EngineModel" Name = "Hayabusa_SEP">
+    <OBJECT Class = "string" Name = "Category"> &quot;@Top&quot; </OBJECT>
+    <OBJECT Class = "bool" Name = "Clonable"> True </OBJECT>
+    <OBJECT Class = "string" Name = "Description"> &quot;Engine that uses ion propulsion&quot; </OBJECT>
+    <OBJECT Class = "AttrCon" Name = "FlowRateModel">
+        <OBJECT Class = "double" Name = "C0"> 1.036e-06 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C1"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C2"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C3"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "string" Name = "EquationType"> &quot;Power&quot; </OBJECT>
+    </OBJECT>
+    <OBJECT Class = "double" Name = "g"> 9.806649999999999 m*sec^-2 </OBJECT>
+    <OBJECT Class = "link" Name = "InputPowerSource">
+        <OBJECT Class = "string" Name = ""> &quot;ProcessedPower&quot; </OBJECT>
+    </OBJECT>
+    <OBJECT Class = "AttrCon" Name = "IspModel">
+        <OBJECT Class = "double" Name = "C0"> 3000 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C1"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C2"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C3"> 0 &quot;&quot; </OBJECT>
+    </OBJECT>
+    <OBJECT Class = "AttrCon" Name = "MassFlowEfficiencyModel">
+        <OBJECT Class = "double" Name = "C0"> 1 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C1"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C2"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C3"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "string" Name = "IndependentVar"> &quot;Power&quot; </OBJECT>
+    </OBJECT>
+    <OBJECT Class = "double" Name = "MaxInputPower"> 2290.867652767773 W </OBJECT>
+    <OBJECT Class = "double" Name = "MinRequiredPower"> 398.1071705534973 W </OBJECT>
+    <OBJECT Class = "double" Name = "PercentDegradationPerYear"> 0 &quot;&quot; </OBJECT>
+    <OBJECT Class = "double" Name = "PercentThrottle"> 93.5 &quot;&quot; </OBJECT>
+    <OBJECT Class = "AttrCon" Name = "PowerEfficiencyModel">
+        <OBJECT Class = "double" Name = "C0"> 1 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C1"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C2"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "double" Name = "C3"> 0 &quot;&quot; </OBJECT>
+        <OBJECT Class = "string" Name = "IndependentVar"> &quot;Power&quot; </OBJECT>
+    </OBJECT>
+    <OBJECT Class = "bool" Name = "ReadOnly"> False </OBJECT>
+    <OBJECT Class = "date" Name = "ReferenceEpoch"> &quot;5 Jul 2011 17:00:34.000000000&quot; TAIG </OBJECT>
+    <OBJECT Class = "container" Name = "ShooterControls" />
+    <OBJECT Class = "int" Name = "STKVersion"> 1201 </OBJECT>
+    <OBJECT Class = "string" Name = "Type"> &quot;EngineIon&quot; </OBJECT>
+    <OBJECT Class = "string" Name = "UserComment"> &quot;Engine that uses ion propulsion&quot; </OBJECT>
+    <OBJECT Class = "string" Name = "Version"> &quot;1.0.0 a&quot; </OBJECT>
+</OBJECT>
+</STKOBJECT>
