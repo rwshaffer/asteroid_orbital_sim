@@ -23,6 +23,8 @@ root.NewScenario('OrbitalSim')
 
 %%  4. Populate simulation objects: Earth, asteroid, electric propulsion engine
 
+%https://agiweb.secure.force.com/faqs/articles/HowTo/interplanetary-ephemeris-summary
+
 %Initializing Jupiter as a test for how to create a planet
 % IAgScenario scenario: Scenario object
 planet = root.CurrentScenario.Children.New('ePlanet', 'Jupiter');
