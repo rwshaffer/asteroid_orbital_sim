@@ -1,0 +1,77 @@
+*******************************************************************************
+Ephemeris / WWW_USER Thu Jun  8 09:13:20 2017 Pasadena, USA      / Horizons    
+*******************************************************************************
+Target body name: (2017 EA)                       {source: JPL#2}
+Center body name: Earth (399)                     {source: DE431}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2017-Feb-17 00:00:00.0000 TDB
+Stop  time      : A.D. 2017-Apr-16 00:00:00.0000 TDB
+Step-size       : 60 minutes
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : 6378.1 x 6378.1 x 6356.8 km     {Equator, meridian, pole}    
+Small perturbers: Yes                             {source: SB431-N16}
+Output units    : KM-S                                                         
+Output type     : GEOMETRIC cartesian states
+Output format   : 2 (position and velocity)
+Reference frame : ICRF/J2000.0                                                 
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+Initial IAU76/J2000 heliocentric ecliptic osculating elements (au, days, deg.):
+  EPOCH=  2457814.5 ! 2017-Mar-02.00 (TDB)         Residual RMS= .2704         
+   EC= .6637903807322831   QR= .7400230207428129   TP= 2457857.4253634126      
+   OM= 161.8980155037973   W=  68.66986798856206   IN= 2.54916135011202        
+  Equivalent ICRF heliocentric equatorial cartesian coordinates (au, au/d):
+   X=-9.443262483675667E-01  Y= 2.933073821891305E-01  Z= 1.266662031174088E-01
+  VX= 2.985660714580667E-03 VY=-1.979398519079220E-02 VZ=-7.648803848027207E-03
+Asteroid physical parameters (km, seconds, rotational period in hours):        
+   GM= n.a.                RAD= n.a.               ROTPER= n.a.                
+   H= 30.8                 G= .150                 B-V= n.a.                   
+                           ALBEDO= n.a.            STYP= n.a.                  
+*******************************************************************************
+            JDTDB,            Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,
+**************************************************************************************************************************************************************************************************
+$$SOE
+2457801.500000000, A.D. 2017-Feb-17 00:00:00.0000, -1.813063023405156E+07,  9.932122175138062E+06, -1.715085602021687E+06,  1.593256237411539E+01, -8.753392121129698E+00,  1.447695166819649E+00,
+2457801.541666667, A.D. 2017-Feb-17 01:00:00.0000, -1.807328045127538E+07,  9.900615006963653E+06, -1.709873607417260E+06,  1.592842932344187E+01, -8.750591988577961E+00,  1.447857331684521E+00,
+2457801.583333333, A.D. 2017-Feb-17 02:00:00.0000, -1.801594553379057E+07,  9.869117899931440E+06, -1.704661029662247E+06,  1.592430388293752E+01, -8.747802596759623E+00,  1.448019139316677E+00,
+2457801.625000000, A.D. 2017-Feb-17 03:00:00.0000, -1.795862545415688E+07,  9.837630815384882E+06, -1.699447870043201E+06,  1.592018607689194E+01, -8.745023940027346E+00,  1.448180589424713E+00,
+2457801.666666667, A.D. 2017-Feb-17 04:00:00.0000, -1.790132018484637E+07,  9.806153714687966E+06, -1.694234129847766E+06,  1.591607592965113E+01, -8.742256012681064E+00,  1.448341681713881E+00,
+$$EOE
+**************************************************************************************************************************************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    XY-plane: plane of the Earth's orbit at the reference epoch
+              Note: obliquity of 84381.448 arcseconds wrt ICRF equator (IAU76)
+    X-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    Z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+  Symbol meaning:
+
+    JDTDB    Julian Day Number, Barycentric Dynamical Time
+      X      X-component of position vector (km)                               
+      Y      Y-component of position vector (km)                               
+      Z      Z-component of position vector (km)                               
+      VX     X-component of velocity vector (km/sec)                           
+      VY     Y-component of velocity vector (km/sec)                           
+      VZ     Z-component of velocity vector (km/sec)                           
+
+Geometric states/elements have no aberrations applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  http://ssd.jpl.nasa.gov/?horizons
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.D.Giorgini@jpl.nasa.gov
+*******************************************************************************
