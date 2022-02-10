@@ -11,10 +11,10 @@
 - Discard the current iteration if the hand calcs show that the set of inputs given lead to horrible/impossible trajectories
 - e.g. "based on the launch window and mining duration given, the return delta-V will be roughly 30 km/s"
 
-3. Initialize STK instance/scenario
+3. (DONE 2/10/2022) Initialize STK instance/scenario
 - Allow for "finding" an open STK instance/scenario instead of creating a new one every time
 
-4. Populate simulation objects: Earth, asteroid, electric propulsion engine
+4. (Work in progress 2/10/2022) Populate simulation objects: Earth, asteroid, electric propulsion engine
 
 5. Insert satellite and configure some settings common to all simulations
 - Turn off any unnecessary graphics to optimize sim. speed
