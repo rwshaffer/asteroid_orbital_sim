@@ -6,11 +6,11 @@
 clear, clc
 
 %% 3. Initialize STK instance/scenario
-% Launch a new instance of STK
-uiapp = actxserver('STK12.Application');
+% % Launch a new instance of STK
+% uiapp = actxserver('STK12.Application');
 
-% or to grab an already open instance of STK
-%uiapp = actxGetRunningServer('STK11.Application');
+or to grab an already open instance of STK
+uiapp = actxGetRunningServer('STK11.Application');
 
 %turn off graphics
 
