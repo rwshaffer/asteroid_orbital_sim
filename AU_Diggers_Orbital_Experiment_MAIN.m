@@ -27,15 +27,5 @@ satName = 'BaselineTraj_SemiFinite';
 sat = root.CurrentScenario.Children.Item(satName);
 ASTK = sat.Propagator;
 
-% Create a handle to the MCS and remove all existing segments
+% Create a handle to the MCS
 MCS = ASTK.MainSequence;
-MCS.RemoveAll;
-MCS.Insert('eVASegmentTypeInitialState','Inner Orbit','-');
-
-% The Insert command will also return a handle to the segment it creates
-propagate = MCS.Insert('eVASegmentTypePropagate','Propagate','-');
-
-% Create a handle to the Initial State Segment, set it to use Modified
-% Keplerian elements and assign new initial values
-initstate = MCS.Item('Inner Orbit');
-initstate.SetElementType('eVAElementTypeTargetVectorOutgoingAsymptote');
