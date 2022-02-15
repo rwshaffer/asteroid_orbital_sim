@@ -20,12 +20,9 @@ root = uiapp.Personality2;
 %https://agiweb.secure.force.com/faqs/articles/HowTo/interplanetary-ephemeris-summary
 
 %% 5. Insert satellite and configure some settings common to all simulations
-
 %- Turn off any unnecessary graphics to optimize sim. speed
 
-satName = 'BaselineTraj_SemiFinite';
-sat = root.CurrentScenario.Children.Item(satName);
-ASTK = sat.Propagator;
-
-% Create a handle to the MCS
-MCS = ASTK.MainSequence;
+satName = 'BaselineTraj_SemiFinite'; %can change iteratively if necessary
+sat = root.CurrentScenario.Children.Item(satName); %satellite handle
+ASTK = sat.Propagator; %propagator handle
+MCS = ASTK.MainSequence; %Create a handle to the MCS
