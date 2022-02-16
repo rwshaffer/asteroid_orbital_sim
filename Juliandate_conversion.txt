@@ -1,3 +1,2 @@
-juliandate(datetime(2021, 11, 4))
-
-converts from datetime to a julian date
+juliandate(datetime(2021, 11, 4)) - converts from datetime to a julian date
+datetime(2459522.5,'convertfrom','juliandate') - converts from julian date to datetime 
