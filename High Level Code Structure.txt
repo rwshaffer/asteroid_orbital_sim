@@ -20,6 +20,9 @@
 
 5. Insert satellite and configure some settings common to all simulations
 - Turn off any unnecessary graphics to optimize sim. speed
+	Satellite Properties in astrogator, red check MCS options, general, uncheck anything under draw while calculating.
+- Prop should be astrogator
+- Everything is default, but dry mass and fuel mass we will custom input. BUT, this doesn't change each iteration.
 
 6. Build MCS based on selected trajectory type
 OUTBOUND options:
