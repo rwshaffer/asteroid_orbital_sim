@@ -15,11 +15,11 @@
 3. (DONE 2/10/2022) Initialize STK instance/scenario
 - Allow for "finding" an open STK instance/scenario instead of creating a new one every time
 
-4. (Work in progress 2/10/2022) Populate simulation objects: Earth, asteroid, electric propulsion engine
+4. (DONE 2/18/2022, can be found in MAIN) Populate simulation objects: Earth, asteroid, electric propulsion engine
 	Note 2/10/2022: What if we did this in STK itself, saved the scenario, and then simply loaded that scenario in the MATLAB code?
 		This information doesn't change w/ each iteration, I don't think. Why create it in MATLAB, which is hard asf to do?
 
-5. Insert satellite and configure some settings common to all simulations
+5. (DONE 2/18/22) Insert satellite and configure some settings common to all simulations
 - Turn off any unnecessary graphics to optimize sim. speed
 	Satellite Properties in astrogator, red check MCS options, general, uncheck anything under draw while calculating.
 - Prop should be astrogator
