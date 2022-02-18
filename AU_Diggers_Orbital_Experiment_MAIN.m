@@ -74,7 +74,7 @@ ML_orbit.Inclination = ML.inc;
 ML_orbit.RAAN = ML.raan;
 ML_orbit.ArgOfPeriapsis = ML.longofperiapsis; % NOTE: This variable is called ArgOfPeriapsis, but it seems to refer
 %                                               to longitude of periapsis, which is different. Be careful!
-ML_orbit.MeanLongitude = ML.M;
+ML_orbit.MeanLongitude = ML.meanlongitude;
 ML_orbit.MeanLongitudeRate = ML.meanlongrate;
 
 
