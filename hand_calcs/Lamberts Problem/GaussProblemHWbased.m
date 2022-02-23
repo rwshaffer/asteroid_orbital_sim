@@ -17,10 +17,13 @@ function [V1,V2]=GaussProblem(rinterceptor,rtargetfinal,deltatknown)
 
     afunc=@(param) m*k*param/((2*m-l^2)*param^2+2*k*l*param-k^2);
     ffunc=@(param) 1-norm(r2)/param*(1-cos(deltanu));
-    E=@(param) acos(1-norm(r1)/(afunc(param))*(1-ffunc(param)));
+    fdot=@(param)sqrt(MU/param)*tan(deltanu/2)*((1-cos(deltanu))/param-1/norm(r1)-1/norm(r2));
+    cosE=@(param) (1-norm(r1)/(afunc(param))*(1-ffunc(param)));
+    sinE=@(param) -norm(r1)*norm(r2)*fdot(param)/sqrt(MU*afunc(param))
+    
+    %E=@(param) acos(1-norm(r1)/(afunc(param))*(1-ffunc(param)));
     g=@(param) norm(r1)*norm(r2)*sin(deltanu)/sqrt(MU*param);
     gdot=@(param)1-norm(r1)/param*(1-cos(deltanu));
-    fdot=@(param)sqrt(MU/param)*tan(deltanu/2)*((1-cos(deltanu))/param-1/norm(r1)-1/norm(r2));
     toffunc=@(param) g(param)+sqrt(afunc(param)^3/MU)*(E(param)-sin(E(param)))
     tofp0=toffunc(p0)
     tofp1=toffunc(p1)

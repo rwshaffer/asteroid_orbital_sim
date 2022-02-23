@@ -6,13 +6,13 @@ a=orbitalelements.sma;
 trueanomaly=orbitalelements.nu;
 e=orbitalelements.ecc;
 %mean motion
-meanmotion=(Mu/(a)^3)^(1/2)*180/pi;
+meanmotion=(Mu/(a)^3)^(1/2);
 %calculate eccentric anomaly
 Eccentricanomaly=acos((e+cos(trueanomaly))/(1+e*cos(trueanomaly)));
 %initial mean anomaly
 meananomaly=-Eccentricanomaly+e*sin(Eccentricanomaly);
 %final mean anomaly
-Meananomaly2=meananomaly+meanmotion*pi/180*deltatime;
+Meananomaly2=meananomaly+meanmotion*deltatime;
 %solve keplers equation for final eccentric anomaly
 fsolver=@(E) e*sin(E)-E-Meananomaly2;
 eccentricanomaly2=fzero(fsolver, Meananomaly2);
