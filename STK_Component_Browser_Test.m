@@ -48,8 +48,11 @@ engine_models = comp_brows.GetFolder('Engine Models');
 engine_models.DuplicateComponent('Constant Thrust and Isp','AU Diggers Engine');
 our_engine = engine_models.Item('AU Diggers Engine');
 
-our_engine.set('Thrust',0.101);
-our_engine.set('Isp',1710);
+thrust = .101; %Newtons
+Isp = 1710; % seconds
+
+our_engine.set('Thrust',thrust);
+our_engine.set('Isp',Isp);
 
 
 %% Connect to folder with planets
@@ -85,7 +88,7 @@ ML_orbit.Inclination = ML.inc;
 ML_orbit.RAAN = ML.raan;
 ML_orbit.ArgOfPeriapsis = ML.longofperiapsis; % NOTE: This variable is called ArgOfPeriapsis, but it seems to refer
 %                                               to longitude of periapsis, which is different. Be careful!
-ML_orbit.MeanLongitude = ML.M;
+ML_orbit.MeanLongitude = ML.meanlongitude;
 ML_orbit.MeanLongitudeRate = ML.meanlongrate;
 
 

@@ -6,6 +6,7 @@
 - Mining duration
 - Uncertainties (asteroid orbit)
 - NOTE: these can be single values, or vectors - run multiple sims in a row
+- Include spacecraft dry mass/fuel mass, even though these are not independent variables in the experiment
 
 2. Use hand calculations to set initial guesses for satellite orbit based on inputs/traj. type
 - Discard the current iteration if the hand calcs show that the set of inputs given lead to horrible/impossible trajectories
@@ -14,12 +15,15 @@
 3. (DONE 2/10/2022) Initialize STK instance/scenario
 - Allow for "finding" an open STK instance/scenario instead of creating a new one every time
 
-4. (Work in progress 2/10/2022) Populate simulation objects: Earth, asteroid, electric propulsion engine
+4. (DONE 2/18/2022, can be found in MAIN) Populate simulation objects: Earth, asteroid, electric propulsion engine
 	Note 2/10/2022: What if we did this in STK itself, saved the scenario, and then simply loaded that scenario in the MATLAB code?
 		This information doesn't change w/ each iteration, I don't think. Why create it in MATLAB, which is hard asf to do?
 
-5. Insert satellite and configure some settings common to all simulations
+5. (DONE 2/18/22) Insert satellite and configure some settings common to all simulations
 - Turn off any unnecessary graphics to optimize sim. speed
+	Satellite Properties in astrogator, red check MCS options, general, uncheck anything under draw while calculating.
+- Prop should be astrogator
+- Everything is default, but dry mass and fuel mass we will custom input. BUT, this doesn't change each iteration.
 
 6. Build MCS based on selected trajectory type
 OUTBOUND options:
