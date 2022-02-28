@@ -28,7 +28,7 @@ if nargin< 4
     targetorbit.epoch=2459600.5; %julian date
     targetorbit.sma=1.9033*10^08; %km
     targetorbit.ecc=0.1363639652278715;
-    targetorbit.inc=4.378033480747216;
+    targetorbit.inc=4.378033480747216*pi/180;
     targetorbit.raan=104.33806293*pi/180; %rad
     targetorbit.aop=183.360697515989*pi/180; %rad
     targetorbit.nu=3.9826; %rad 
@@ -39,7 +39,7 @@ if nargin< 4
         interceptororbit.epoch=2451545.0; %julian date
         interceptororbit.sma=149.598*10^6; %km
         interceptororbit.ecc=0.01671022;
-        interceptororbit.inc=0.00005;
+        interceptororbit.inc=0.00005*pi/180;
         interceptororbit.raan=3.4542; %rads
         interceptororbit.aop=4.6679; %rads
         interceptororbit.nu=6.1948; %rads
@@ -74,17 +74,21 @@ for n=1:length(date)
         %update position of 1989 ML to after flight, needs date to update from epoch
         [rtargetfinal,vtargetfinal]=KeplerProblem(targetorbit, date(n)-targetorbit.epoch+t(i),rtargetinitial,vtargetinitial);
         %Note: gauss problem will fail for many times
+        date(n)
+        vinterceptorinitial;
+        vtargetfinal;
         [v1,v2]=GaussProblemtextbook(rinterceptorinitial,rtargetfinal,t(i));
         deltavinitial=abs(norm(v1-vinterceptorinitial));
         deltavfinal=abs(norm(vtargetfinal-v2));
         deltav(i)=deltavinitial+deltavfinal;
+        %pause
     end
     %find minimum deltav's
     [~,index]=min(deltav);
     %this will be structured to give the 1st row date, 2nd row minimum delta v
     %3rd row time associated, 4th and 5th row one interval below that,
     %6th and 7th row one interval above the minimum. This will ensure the
-    %true minimum is within the intervale
+    %true minimum is within the interval
     disp(index);
     disp(index(1));
     disp(deltav);

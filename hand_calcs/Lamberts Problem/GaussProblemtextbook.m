@@ -2,6 +2,7 @@ function [V1,V2]=GaussProblemtextbook(rinterceptor,rtargetfinal,deltatknown)
 try
     %convert from days to seconds
     format long
+    deltatknown;
     deltatknown=deltatknown*24*60*60;
     r1=reshape(rinterceptor,3,1);
     r2=reshape(rtargetfinal, 3, 1);
@@ -53,8 +54,7 @@ try
     vz1=(r2(3)-finalf*r1(3))/finalg;
     V1=[vx1;vy1;vz1];
     V2=finalfdot*r1+finalgdot*V1;
-    norm(V1);
-    
+    pause
 catch
     %this makes this an unacheivable delta v
     disp("Gauss Failed")

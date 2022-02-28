@@ -12,7 +12,7 @@ Eccentricanomaly=acos((e+cos(trueanomaly))/(1+e*cos(trueanomaly)));
 %initial mean anomaly
 meananomaly=-Eccentricanomaly+e*sin(Eccentricanomaly);
 %final mean anomaly
-Meananomaly2=meananomaly+meanmotion*deltatime;
+Meananomaly2=meananomaly+meanmotion*(deltatime*24*60*60);
 %solve keplers equation for final eccentric anomaly
 fsolver=@(E) e*sin(E)-E-Meananomaly2;
 eccentricanomaly2=fzero(fsolver, Meananomaly2);
