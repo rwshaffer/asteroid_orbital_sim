@@ -77,6 +77,7 @@ ML_orbit.ArgOfPeriapsis = ML.longofperiapsis; % NOTE: This variable is called Ar
 ML_orbit.MeanLongitude = ML.meanlongitude;
 ML_orbit.MeanLongitudeRate = ML.meanlongrate;
 
+ML_body.SetDefaultEphemerisByName('Analytic Orbit');
 
 %% Insert Earth and 1989 ML as planets
 earth_obj = root.CurrentScenario.Children.New('ePlanet', 'Earth');
