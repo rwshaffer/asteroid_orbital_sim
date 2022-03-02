@@ -70,6 +70,9 @@ for n=1:length(date)
     [rinteceptorepoch,vinterceptorepoch]=Kepler2Carts(interceptororbit, "sun");
     %update satellite/Earth position to launch date
     [rinterceptorinitial,vinterceptorinitial]=KeplerProblem(interceptororbit, date(n)-interceptororbit.epoch,rinteceptorepoch,vinterceptorepoch);
+    rinterceptorinitial
+    vinterceptorinitial
+    pause
     for i=1:length(t)
         %update position of 1989 ML to after flight, needs date to update from epoch
         [rtargetfinal,vtargetfinal]=KeplerProblem(targetorbit, date(n)-targetorbit.epoch+t(i),rtargetinitial,vtargetinitial);
