@@ -9,9 +9,10 @@
 % https://help.agi.com/stkdevkit/index.htm#stkGator/AstrogatorIntroObjectModel.htm?TocPath=Using%2520Core%2520Libraries%257CSTK%2520Object%2520Model%257CSTK%2520Astrogator%257C_____2
 % https://help.agi.com/stkdevkit/Content/DocX/STKObjects~IAgScenario.html
 % https://help.agi.com/stkdevkit/Content/DocX/STKObjects~IAgComponentInfoCollection.html
-% 
+%
 
-
+% inputVec will be the vector of inputs, taking data from Terelle's GUI
+function AU_Diggers_Orbital_Experiment_MAIN(inputVec)
 clear, clc
 
 %% 3. Initialize STK instance/scenario
@@ -94,8 +95,6 @@ ML_obj.PositionSourceData.set('CentralBody','1989_ML');
 % Create a new satellite. See STK Programming Interface Help to see that
 % the enumeration for a Satellite object is 'eSatellite' with a value of 18
 sat = root.CurrentScenario.Children.New(18, 'ASTG_Sat');
-% or connect to an already existing satellite
-%sat = root.CurrentScenario.Children.Item('Satellite1');
 
 % Set the new Satellite to use Astrogator as the propagator
 sat.SetPropagatorType('ePropagatorAstrogator')
@@ -106,3 +105,7 @@ sat.SetPropagatorType('ePropagatorAstrogator')
 % for convenience
 ASTG = sat.Propagator;
 MCS = ASTG.MainSequence; %Create a handle to the MCS
+
+%% Saving data
+data = 1; %a test value until we have data to save
+end
