@@ -120,13 +120,15 @@ ts_ast_orbit = MCS.Insert('eVASegmentTypeTargetSequence','Target Asteroid Orbit'
 burn_raise_apo = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Raise Apoapsis','-');
 % Change to Finite and set attitude thrust vector
 burn_raise_apo.SetManeuverType('eVAManeuverTypeFinite');
-burn_raise_apo.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
+burn_raise_apo.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_apo.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
+burn_raise_apo.Maneuver.AttitudeControl.Az0 = -6.78;
+burn_raise_apo.Maneuver.AttitudeControl.El0 = -16.57;
+
 %   Note: it appears that this defaults to spherical which is what we want. Unsure though
-%   Note: need to find a way to set thrust vector values!
 % Change to correct engine and configure thrust efficiency
 burn_raise_apo.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_raise_apo.Maneuver.ThrustEfficiency = 0.8;
+burn_raise_apo.Maneuver.ThrustEfficiency = 0.81;
 burn_raise_apo.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
 % Configure propagator and stopping conditions - Use semimajor axis as a stopping condition
 burn_propagator = burn_raise_apo.Maneuver.Propagator;
@@ -139,8 +141,8 @@ sma_stop.Properties.UserCalcObjectName = 'Semimajor Axis';
 sma_stop.Properties.UserCalcObject.CentralBodyName = 'Sun';
 sma_stop.Properties.Trip = 1.78742e+08;
 % Set control parameters for target sequence
-burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteSphericalAz');
-burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteSphericalElev');
+burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteAz0');
+burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteEl0');
 burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteThrustEfficiency');
 sma_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
 
@@ -160,15 +162,15 @@ coast_to_apo.StoppingConditions.Item('Apoapsis').Properties.CentralBodyName = 'S
 burn_raise_peri = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Raise Periapsis','-');
 % Change to Finite and set attitude thrust vector
 burn_raise_peri.SetManeuverType('eVAManeuverTypeFinite');
-burn_raise_peri.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
+burn_raise_peri.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_peri.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
-%   Note: it appears that this defaults to spherical which is what we want. Unsure though
-%   Note: need to find a way to set thrust vector values!
+burn_raise_peri.Maneuver.AttitudeControl.Az0 = -10.99;
+burn_raise_peri.Maneuver.AttitudeControl.El0 = 0.901;
 % Change to correct engine and configure thrust efficiency
 burn_raise_peri.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_raise_peri.Maneuver.ThrustEfficiency = 0.1;
+burn_raise_peri.Maneuver.ThrustEfficiency = 0.108;
 burn_raise_peri.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
-% Configure propagator and stopping conditions - Use semimajor axis as a stopping condition
+% Configure propagator and stopping conditions - Use descending node as a stopping condition
 burn_propagator = burn_raise_peri.Maneuver.Propagator;
 burn_propagator.PropagatorName = 'Heliocentric';
 burn_propagator.MaxPropagationTime = 86400*300;
@@ -177,8 +179,8 @@ burn_propagator.StoppingConditions.Remove('Duration');
 burn_propagator.StoppingConditions.Item('DescendingNode').Properties.CoordSystem ...
     = 'CentralBody/Sun MeanEclpJ2000';
 % Set control parameters for target sequence
-burn_raise_peri.EnableControlParameter('eVAControlManeuverFiniteSphericalAz');
-burn_raise_peri.EnableControlParameter('eVAControlManeuverFiniteSphericalElev');
+burn_raise_peri.EnableControlParameter('eVAControlManeuverFiniteAz0');
+burn_raise_peri.EnableControlParameter('eVAControlManeuverFiniteEl0');
 burn_raise_peri.EnableControlParameter('eVAControlManeuverFiniteThrustEfficiency');
 % Configure results for target sequence - Multibody and spherical elems for 1989 ML rendezvous
 burn_raise_peri.Results.Add('MultiBody/Delta Declination');
@@ -209,11 +211,11 @@ sma_control.Enable = true;
 sma_control.MaxStep = 100000;
 sma_control.Perturbation = 100;
 % Enable thrust vector controls (no need to configure)
-pointing_string = 'FiniteMnvr.Pointing.Spherical';
-dc.ControlParameters.GetControlByPaths('Burn_Raise_Apoapsis',sprintf('%s.Azimuth',pointing_string)).Enable = true;
-dc.ControlParameters.GetControlByPaths('Burn_Raise_Apoapsis',sprintf('%s.Elevation',pointing_string)).Enable = true;
-dc.ControlParameters.GetControlByPaths('Burn_Raise_Periapsis',sprintf('%s.Azimuth',pointing_string)).Enable = true;
-dc.ControlParameters.GetControlByPaths('Burn_Raise_Periapsis',sprintf('%s.Elevation',pointing_string)).Enable = true;
+pointing_string = 'FiniteMnvr.Pointing.TimeVarying';
+dc.ControlParameters.GetControlByPaths('Burn_Raise_Apoapsis',sprintf('%s.Az0',pointing_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Burn_Raise_Apoapsis',sprintf('%s.El0',pointing_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Burn_Raise_Periapsis',sprintf('%s.Az0',pointing_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Burn_Raise_Periapsis',sprintf('%s.El0',pointing_string)).Enable = true;
 % Enable results and configure tolerances
 delta_dec_result = dc.Results.GetResultByPaths('Burn_Raise_Periapsis','Delta_Declination');
 delta_dec_result.Enable = true;
@@ -234,11 +236,195 @@ dc.Mode = 'eVAProfileModeIterate';
 ts_ast_orbit.Action = 'eVATargetSeqActionRunActiveProfiles';
 
 
+%% ----------------------------------------------------------------------------------------------- %%
+%% TARGET RENDEZVOUUS
+% Insert and configure a target sequence that will vary the impulsive and finite burns
+% when approaching the asteroid such that the orbital period roughly matches the asteroid, 
+% and the relative distance and velocity are quite small (but still non-zero)
+%% TARGET SEQUENCE: Targeting Rendezvous
+ts_rdvs = MCS.Insert('eVASegmentTypeTargetSequence','Target Rendezvous','-');
 
 
+%% MANEUVER - Impulsive burn
+% Insert inside Target Asteroid Orbit.
+impulsive_burn = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn','-');
+% Set attitude thrust vector and magnitude
+impulsive_burn.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
+impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn.Maneuver.AttitudeControl.CoordType = 'eVASphericalImpDeltaV';
+impulsive_burn.Maneuver.AttitudeControl.Azimuth = 185.803;
+impulsive_burn.Maneuver.AttitudeControl.Elevation = -46.3204;
+impulsive_burn.Maneuver.AttitudeControl.Magnitude = 168.957;
+% Configure control parameters for target sequence
+impulsive_burn.EnableControlParameter('eVAControlManeuverImpulsiveSphericalAz');
+impulsive_burn.EnableControlParameter('eVAControlManeuverImpulsiveSphericalElev');
+impulsive_burn.EnableControlParameter('eVAControlManeuverImpulsiveSphericalMag');
 
-ASTG.RunMCS
 
-ASTG.RunMCS
+%% MANEUVER - Finite burn to "rendezvous" with asteriod (closest we get in interplanetary traj.)
+% Insert inside Target Rendezvous.
+burn_close_app = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Burn Close Approach','-');
+% Change to Finite and set attitude thrust vector
+burn_close_app.SetManeuverType('eVAManeuverTypeFinite');
+burn_close_app.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
+burn_close_app.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+burn_close_app.Maneuver.AttitudeControl.Az0 = 180.255;
+burn_close_app.Maneuver.AttitudeControl.El0 = -3.768;
+% Change to correct engine and configure thrust efficiency
+burn_close_app.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
+% burn_close_app.Maneuver.ThrustEfficiency = 1;
+% burn_close_app.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
+% Configure propagator and stopping conditions - Use descending node as a stopping condition
+burn_propagator = burn_close_app.Maneuver.Propagator;
+burn_propagator.PropagatorName = 'Heliocentric';
+burn_propagator.MaxPropagationTime = 86400*300;
+burn_propagator.StoppingConditions.Add('Epoch');
+burn_propagator.StoppingConditions.Remove('Duration');
+epoch_stop = burn_propagator.StoppingConditions.Item('Epoch');
+epoch_stop.Properties.Trip = "9 Nov 2026 07:43:00.000";
+% Set control parameters for target sequence
+burn_close_app.EnableControlParameter('eVAControlManeuverFiniteAz0');
+burn_close_app.EnableControlParameter('eVAControlManeuverFiniteEl0');
+epoch_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
+
+% Configure results for target sequence - Multibody and spherical elems for 1989 ML rendezvous
+burn_close_app.Results.Add('Keplerian Elems/Orbit_Period');
+burn_close_app.Results.Item('Orbit_Period').CentralBodyName = 'Sun';
+burn_close_app.Results.Add('Spherical Elems/R Mag');
+burn_close_app.Results.Item('R_Mag').ReferencePointName = 'CentralBody/1989_ML Center';
+burn_close_app.Results.Add('Spherical Elems/V Mag');
+burn_close_app.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+
+
+%% Configure TS - Target Rendezvous
+% Get handle to differential corrector used in target sequence
+dc = ts_rdvs.Profiles.Item('Differential Corrector');
+% Configure final Epoch control parameter - change max step
+epoch_control = dc.ControlParameters.GetControlByPaths('Burn_Close_Approach','FiniteMnvr.StoppingConditions.Epoch.TripValue');
+epoch_control.Enable = true;
+epoch_control.MaxStep = 5000;
+% Enable impulsive maneuver controls (no special configurations)
+impulsive_string = 'ImpulsiveMnvr.Pointing.Spherical';
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn',sprintf('%s.Azimuth',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn',sprintf('%s.Elevation',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn',sprintf('%s.Magnitude',impulsive_string)).Enable = true;
+% Enable finite thrust vector controls (no need to configure)
+pointing_string = 'FiniteMnvr.Pointing.TimeVarying';
+dc.ControlParameters.GetControlByPaths('Burn_Close_Approach',sprintf('%s.Az0',pointing_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Burn_Close_Approach',sprintf('%s.El0',pointing_string)).Enable = true;
+% Enable results and configure tolerances
+period_result = dc.Results.GetResultByPaths('Burn_Close_Approach','Orbit_Period');
+period_result.Enable = true;
+period_result.DesiredValue = ML.period; % Note: in seconds
+period_result.Tolerance = 0.75 * 86400; % 0.75 days, converted to seconds
+rmag_result = dc.Results.GetResultByPaths('Burn_Close_Approach','R_Mag');
+rmag_result.Enable = true;
+rmag_result.Tolerance = 6000;
+vmag_result = dc.Results.GetResultByPaths('Burn_Close_Approach','V_Mag');
+vmag_result.Enable = true;
+vmag_result.Tolerance = 0.1;
+% Set final DC and targeter properties and run modes
+dc.MaxIterations = 50;
+dc.EnableDisplayStatus = true;
+dc.Mode = 'eVAProfileModeIterate';
+ts_rdvs.Action = 'eVATargetSeqActionRunActiveProfiles';
+
+
+%% ----------------------------------------------------------------------------------------------- %%
+%% TARGET ASTEROID PERIOD
+% Insert and configure a target sequence that will vary the impulsive burn
+% after closest arrival such that the orbital period exactly matches the asteroid
+%% TARGET SEQUENCE: Targeting Period
+ts_period = MCS.Insert('eVASegmentTypeTargetSequence','Target Orbital Period','-');
+
+
+%% MANEUVER - Impulsive burn
+% Insert inside Target Asteroid Orbit.
+impulsive_burn_period = ts_period.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn Match Period','-');
+% Set attitude thrust vector and magnitude
+impulsive_burn_period.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
+impulsive_burn_period.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn_period.Maneuver.AttitudeControl.CoordType = 'eVASphericalImpDeltaV';
+impulsive_burn_period.Maneuver.AttitudeControl.Azimuth = -5.777;
+impulsive_burn_period.Maneuver.AttitudeControl.Elevation = -10.721;
+impulsive_burn_period.Maneuver.AttitudeControl.AllowNegativeSphericalMagnitude = 1;
+impulsive_burn_period.Maneuver.AttitudeControl.Magnitude = -25.4728;
+% Configure control parameters for target sequence
+impulsive_burn_period.EnableControlParameter('eVAControlManeuverImpulsiveSphericalAz');
+impulsive_burn_period.EnableControlParameter('eVAControlManeuverImpulsiveSphericalElev');
+impulsive_burn_period.EnableControlParameter('eVAControlManeuverImpulsiveSphericalMag');
+% Configure results for target sequence - Period around sun and speed rel. to asteroid
+impulsive_burn_period.Results.Add('Keplerian Elems/Orbit_Period');
+impulsive_burn_period.Results.Item('Orbit_Period').CentralBodyName = 'Sun';
+impulsive_burn_period.Results.Add('Spherical Elems/V Mag');
+impulsive_burn_period.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+
+
+%% Configure TS - Target Rendezvous
+% Get handle to differential corrector used in target sequence
+dc = ts_period.Profiles.Item('Differential Corrector');
+% Enable impulsive maneuver controls (no special configurations)
+impulsive_string = 'ImpulsiveMnvr.Pointing.Spherical';
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Period',sprintf('%s.Azimuth',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Period',sprintf('%s.Elevation',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Period',sprintf('%s.Magnitude',impulsive_string)).Enable = true;
+% Enable results and configure tolerances
+period_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Period','Orbit_Period');
+period_result.Enable = true;
+period_result.DesiredValue = ML.period; % Note: in seconds
+period_result.Tolerance = 1e-5 * 86400; % 1e-5 days, converted to seconds
+% Set final DC and targeter properties and run modes
+dc.MaxIterations = 50;
+dc.EnableDisplayStatus = true;
+dc.Mode = 'eVAProfileModeIterate';
+ts_period.Action = 'eVATargetSeqActionRunActiveProfiles';
+
+
+%% ----------------------------------------------------------------------------------------------- %%
+%% TARGET ASTEROID PROX OPS
+% Insert and configure a target sequence that will vary the impulsive burn
+% after closest arrival such that the satellite velocity exactly matches the asteroid
+%% TARGET SEQUENCE: Targeting Period
+ts_proxops = MCS.Insert('eVASegmentTypeTargetSequence','Target Prox Ops','-');
+
+
+%% MANEUVER - Impulsive burn
+% Insert inside Target Asteroid Orbit.
+impulsive_burn_match_speed = ts_proxops.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn Match Speed','-');
+% Set attitude thrust vector and magnitude
+impulsive_burn_match_speed.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
+impulsive_burn_match_speed.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn_match_speed.Maneuver.AttitudeControl.CoordType = 'eVACartesianImpDeltaV';
+impulsive_burn_match_speed.Maneuver.AttitudeControl.X = -7.035;
+impulsive_burn_match_speed.Maneuver.AttitudeControl.Y = -0.05;
+impulsive_burn_match_speed.Maneuver.AttitudeControl.Z = -0.05;
+% Configure control parameters for target sequence
+impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCartesianX');
+impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCartesianY');
+impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCartesianZ');
+% Configure results for target sequence - Period around sun and speed rel. to asteroid
+impulsive_burn_match_speed.Results.Add('Spherical Elems/V Mag');
+impulsive_burn_match_speed.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+
+
+%% Configure TS - Target Rendezvous
+% Get handle to differential corrector used in target sequence
+dc = ts_proxops.Profiles.Item('Differential Corrector');
+% Enable impulsive maneuver controls (no special configurations)
+impulsive_string = 'ImpulsiveMnvr.Pointing.Cartesian';
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Speed',sprintf('%s.X',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Speed',sprintf('%s.Y',impulsive_string)).Enable = true;
+dc.ControlParameters.GetControlByPaths('Impulsive_Burn_Match_Speed',sprintf('%s.Z',impulsive_string)).Enable = true;
+% Enable results and configure tolerances
+velocity_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Speed','V_Mag');
+velocity_result.Enable = true;
+velocity_result.Tolerance = 1e-4;
+% Set final DC and targeter properties and run modes
+dc.MaxIterations = 50;
+dc.EnableDisplayStatus = true;
+dc.Mode = 'eVAProfileModeIterate';
+ts_proxops.Action = 'eVATargetSeqActionRunActiveProfiles';
+
+
 
 %end

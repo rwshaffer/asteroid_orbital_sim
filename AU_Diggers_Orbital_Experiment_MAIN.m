@@ -118,5 +118,13 @@ sat.SetPropagatorType('ePropagatorAstrogator')
 ASTG = sat.Propagator;
 MCS = ASTG.MainSequence; %Create a handle to the MCS
 
+%% 6. Create new axes to track thrust vector with respect to 1989 ML
+% VNC (velocity, normal, conormal) coordinate system centered at 1989 ML
+axesFactory = sat.Vgt.Axes.Factory;
+vncML = axesFactory.Create('VNC(1989_ML)','','eCrdnAxesTypeTrajectory');
+vncML.ReferenceSystem.SetPath('CentralBody/1989_ML J2000');
+vncML.TrajectoryAxesType = 'eCrdnTrajectoryAxesVVLH';
+
+
 %% Saving data
 data = 1; %a test value until we have data to save
