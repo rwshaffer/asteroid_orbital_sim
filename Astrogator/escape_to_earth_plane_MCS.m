@@ -1,4 +1,4 @@
-%function [] = escape_to_earth_plane_MCS(root,sat)
+function [sat] = escape_to_earth_plane_MCS(ML,sat,launch_date)
 
 
 % Note for EGA code: one of the inputs to this function will be the Earth escape date, 
@@ -27,7 +27,7 @@ ts_ast_plane = MCS.Insert('eVASegmentTypeTargetSequence','Target Asteroid Plane'
 initstate = ts_ast_plane.Segments.Insert('eVASegmentTypeInitialState','Escape Periapsis','-');
 % Set initial state - Outgoing Asymptote elements.
 initstate.SetElementType('eVAElementTypeTargetVectorOutgoingAsymptote');
-initstate.OrbitEpoch = "7 Jul 2025 07:00:00.000";
+initstate.OrbitEpoch = launch_date;
 initstate.Element.RadiusofPeriapsis = 6778.14;
 initstate.Element.C3Energy = 5.01067;
 initstate.Element.RAOutgoing = 3.41985;
@@ -425,6 +425,6 @@ dc.EnableDisplayStatus = true;
 dc.Mode = 'eVAProfileModeIterate';
 ts_proxops.Action = 'eVATargetSeqActionRunActiveProfiles';
 
+ASTG.RunMCS()
 
-
-%end
+end

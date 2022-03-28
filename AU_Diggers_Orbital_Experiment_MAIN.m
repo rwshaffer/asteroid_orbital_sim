@@ -15,13 +15,13 @@
 clear, clc
 
 
+%% User Inputs
 
+outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
 
+launch_date = "7 Jul 2025 07:00:00.000";
 
-
-
-
-
+asteroid_uncertainty = 0.1; % Percent orbit uncertainty to apply to all elements uniformly
 
 
 
@@ -63,14 +63,14 @@ ML_body = central_bodies.Item('1989 ML');
 
 %% Find 1989 ML orbital parameters from JPL
 % Note: Probably easiest to save these as a .mat file
-ML.epoch = 2.4596e+06;
-ML.sma = 1.9033e+08;
-ML.ecc = 0.136364;
-ML.inc = 4.37803;
-ML.raan = 104.33806;
-ML.aop = 183.360698;
-ML.M = 240.65329;
-ML.period = 524.15224 * 86400; % Units: seconds
+ML.epoch = 2.4596e+06 * (1+asteroid_uncertainty/100);
+ML.sma = 1.9033e+08 * (1+asteroid_uncertainty/100);
+ML.ecc = 0.136364 * (1+asteroid_uncertainty/100);
+ML.inc = 4.37803 * (1+asteroid_uncertainty/100);
+ML.raan = 104.33806 * (1+asteroid_uncertainty/100);
+ML.aop = 183.360698 * (1+asteroid_uncertainty/100);
+ML.M = 240.65329 * (1+asteroid_uncertainty/100);
+ML.period = 524.15224 * 86400 * (1+asteroid_uncertainty/100); % Units: seconds
 
 % Define a few other quantities used by STK to define the orbit
 ML.longofperiapsis = ML.raan + ML.aop; % Longitude of periapsis (deg)
@@ -118,12 +118,24 @@ sat.SetPropagatorType('ePropagatorAstrogator')
 ASTG = sat.Propagator;
 MCS = ASTG.MainSequence; %Create a handle to the MCS
 
-%% 6. Create new axes to track thrust vector with respect to 1989 ML
+%% 5b. Create new axes to track thrust vector with respect to 1989 ML
 % VNC (velocity, normal, conormal) coordinate system centered at 1989 ML
 axesFactory = sat.Vgt.Axes.Factory;
 vncML = axesFactory.Create('VNC(1989_ML)','','eCrdnAxesTypeTrajectory');
 vncML.ReferenceSystem.SetPath('CentralBody/1989_ML J2000');
 vncML.TrajectoryAxesType = 'eCrdnTrajectoryAxesVVLH';
+
+
+%% 6. Build Mission Control Sequence for satellite based on user inputs
+switch outbound_traj
+    case 'Direct'
+        sat = escape_to_earth_plane_MCS(ML,sat,launch_date);
+end
+
+
+
+
+
 
 
 %% Saving data
