@@ -4,7 +4,7 @@ function [sat,diverged] = run_target_sequences(sat)
 %% Convergence parameters to play with
 kmax = 30; % Max number of times to run a given target sequence before giving up
 consecutive_divergences_allowed = 2; % Number of RunMCS iterations that any result can diverge for before making changes
-div_threshold = 2; % Percentage of improvement that a result must see in order to not be considered "diverging"
+div_threshold = 0.5; % Percentage of improvement that a result must see in order to not be considered "diverging"
 tolerance_scale_factor = 2; % Factor by which to increase tolerance of a result
 num_tolerance_increases = 1; % Number of times it is allowed to increase a result's tolerance before moving on to
                              % more drastic measures
@@ -132,7 +132,7 @@ for i = ts_ind
                     % Check whether the tolerance increasing function wants to keep trying
                     elseif keep_changing_tolerances
                         % Increase tolerances on results that are struggling to converge
-                        [ts,dc,keep_changing_tolerances] = increase_tolerances(ts,dc,tol_increased);
+                        [ts,dc,tolerances,tol_increased,keep_changing_tolerances] = increase_tolerances(ts,dc,tolerances,tol_increased,action_needed,num_tolerance_increases,tolerance_scale_factor);
                  
                         
                      % Check whether initial conditions have been changed more than allowed
