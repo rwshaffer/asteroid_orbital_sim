@@ -1,4 +1,4 @@
-function [diverged] = run_target_sequences(sat)
+function [sat,diverged] = run_target_sequences(sat)
 
 
 %% Convergence parameters to play with
