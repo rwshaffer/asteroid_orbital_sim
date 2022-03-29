@@ -7,7 +7,9 @@ for i = 0:MCS_items-1
     % Check if current segment is a target sequence
     if ASTG.MainSequence.Item(i).Type == "eVASegmentTypeTargetSequence"
         ts_ind = [ts_ind i]; % Store index of target sequence
+        segment = ts.Segments.Item(0); % Gives you the first item within the target sequence
+        % code to check whether "segment" is a maneuver here
     end
-end    
+end
 dataTable = 1;
 end
