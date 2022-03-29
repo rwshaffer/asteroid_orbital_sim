@@ -9,13 +9,7 @@ for i = 0:MCS_items-1
         ts = [ts_ind i]; % Store index of target sequence
         
     end
-    
-end
-for jj = 1:i
-    ts = ASTG.MainSequence.Item(0); % Gives you the target sequence object
-    segment = ts.Segments.Item(0); % Gives you the first item within the target sequence
-    % code to check whether "segment" is a maneuver here
-    
+   for jj = 0:
 end
 dataTable = 1;
 end
