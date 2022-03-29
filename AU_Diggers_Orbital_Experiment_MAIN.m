@@ -21,7 +21,7 @@ outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
 
 launch_date = "7 Jul 2025 07:00:00.000";
 
-asteroid_uncertainty = 0.1; % Percent orbit uncertainty to apply to all elements uniformly
+asteroid_uncertainty = 0; % Percent orbit uncertainty to apply to all elements uniformly
 
 
 
@@ -63,7 +63,7 @@ ML_body = central_bodies.Item('1989 ML');
 
 %% Find 1989 ML orbital parameters from JPL
 % Note: Probably easiest to save these as a .mat file
-ML.epoch = 2.4596e+06 * (1+asteroid_uncertainty/100);
+ML.epoch = 2.4596e+06;
 ML.sma = 1.9033e+08 * (1+asteroid_uncertainty/100);
 ML.ecc = 0.136364 * (1+asteroid_uncertainty/100);
 ML.inc = 4.37803 * (1+asteroid_uncertainty/100);

@@ -1,4 +1,4 @@
-function [sat,diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date)
+function [sat] = escape_to_earth_plane_MCS(ML,sat,launch_date)
 
 
 % Note for EGA code: one of the inputs to this function will be the Earth escape date, 
@@ -434,7 +434,7 @@ z_control. Perturbation = 0.001;
 % Enable results and configure tolerances
 velocity_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Speed','V_Mag');
 velocity_result.Enable = true;
-velocity_result.Tolerance = 3e-3;
+velocity_result.Tolerance = 5e-4;
 % Set final DC and targeter properties and run modes
 dc.MaxIterations = 50;
 dc.EnableDisplayStatus = true;
@@ -445,9 +445,6 @@ dc.Mode = 'eVAProfileModeIterate';
 
 %% Call function to systematically achieve convergence with all target sequences
 
-[sat,diverged] = run_target_sequences(sat);
-
-
-
+run_target_sequences(sat)
 
 end
