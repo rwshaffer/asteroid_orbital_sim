@@ -138,5 +138,5 @@ end
 
 
 %% Saving data
-dataTable = save_data(sat);
+dataTable = extract_data(sat);
 data = 1; %a test value until we have data to save

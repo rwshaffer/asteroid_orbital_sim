@@ -1,4 +1,4 @@
-function [dataTable] = save_data(sat)
+function [dataTable] = extract_data(sat)
 ASTG = sat.Propagator;
 %% Identify all target sequences in the MCS
 ts_ind = []; % List of indices of target sequences in the MCS
@@ -22,4 +22,9 @@ for i = 0:MCS_items-1
     end
     dataTable = deltaV;
 end
+<<<<<<< Updated upstream:save_data.m
     disp(['Total deltaV for this Trajectory is: ' num2str(deltaV) 'km/s.'])
+=======
+deltaV = item.IAgVAStateCalcMCSDeltaV;
+end
+>>>>>>> Stashed changes:extract_data.m
