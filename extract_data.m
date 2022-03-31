@@ -20,7 +20,20 @@ for i = 0:MCS_items-1
             end
         end
     end
-    dataTable = deltaV;
+    
 end
+ts = ASTG.MainSequence.Item(0);
+first_segment = ts.Segments.Item(0);
+first_segment.InitialState.Epoch;
+
+
+
+
+num_ts = ASTG.MainSequence.Count;
+final_ts = ASTG.MainSequence.Item(num_ts - 2);
+num_segments = final_ts.Segments.Count;
+final_segment = final_ts.Segments.Item(num_segments-2);
+final_segment.FinalState.Epoch;
+dataTable = deltaV;
 disp(['Total deltaV for this Trajectory is: ' num2str(deltaV) 'km/s.'])
 end
