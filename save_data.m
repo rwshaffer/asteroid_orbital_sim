@@ -16,7 +16,7 @@ for i = 0:MCS_items-1
         end
     end
 end
-dataTable = 1;
-deltaVIAgVAStateCalcMCSDeltaV;
+%dataTable = 1;
+deltaV = item.IAgVAStateCalcMCSDeltaV;
 %deltaV calc "AgVAStateCalcMCSDeltaV Object"
 end
