@@ -58,6 +58,7 @@ burn_propagator = burn_to_EGA_exit.Maneuver.Propagator;
 burn_propagator.StoppingConditions.Add('R_Magnitude');
 burn_propagator.StoppingConditions.Remove('Duration');
 burn_propagator.StoppingConditions.Item('R_Magnitude').Properties.Trip = 1e6;
+burn_propagator.Results.Add('Maneuver/DeltaV');
 
 
 %% PROPAGATE - Brief propagation in Heliocentric orbit
@@ -139,6 +140,7 @@ sma_stop = burn_propagator.StoppingConditions.Item('UserSelect');
 sma_stop.Properties.UserCalcObjectName = 'Semimajor Axis';
 sma_stop.Properties.UserCalcObject.CentralBodyName = 'Sun';
 sma_stop.Properties.Trip = 1.78742e+08;
+burn_raise_apo.Results.Add('Maneuver/DeltaV');
 % Set control parameters for target sequence
 burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteAz0');
 burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteEl0');
@@ -191,7 +193,7 @@ burn_raise_peri.Results.Add('Spherical Elems/R Mag');
 burn_raise_peri.Results.Item('R_Mag').ReferencePointName = 'CentralBody/1989_ML Center';
 burn_raise_peri.Results.Add('Spherical Elems/V Mag');
 burn_raise_peri.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
-
+burn_raise_peri.Results.Add('Maneuver/DeltaV');
 
 %% Configure TS - Target Asteroid Orbit
 % Get handle to differential corrector used in target sequence
@@ -255,6 +257,7 @@ impulsive_burn.Maneuver.AttitudeControl.Azimuth = 207.7;
 impulsive_burn.Maneuver.AttitudeControl.Elevation = 26.8373;
 impulsive_burn.Maneuver.AttitudeControl.Magnitude = 190;
 impulsive_burn.Maneuver.AttitudeControl.AllowNegativeSphericalMagnitude = 1;
+impulsive_burn.Results.Add('Maneuver/DeltaV');
 % Configure control parameters for target sequence
 impulsive_burn.EnableControlParameter('eVAControlManeuverImpulsiveSphericalAz');
 impulsive_burn.EnableControlParameter('eVAControlManeuverImpulsiveSphericalElev');
@@ -295,6 +298,7 @@ burn_close_app.Results.Add('Spherical Elems/R Mag');
 burn_close_app.Results.Item('R_Mag').ReferencePointName = 'CentralBody/1989_ML Center';
 burn_close_app.Results.Add('Spherical Elems/V Mag');
 burn_close_app.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+burn_close_app.Results.Add('Maneuver/DeltaV');
 
 
 %% Configure TS - Target Rendezvous
@@ -357,6 +361,7 @@ impulsive_burn_period.Results.Add('Keplerian Elems/Orbit_Period');
 impulsive_burn_period.Results.Item('Orbit_Period').CentralBodyName = 'Sun';
 impulsive_burn_period.Results.Add('Spherical Elems/V Mag');
 impulsive_burn_period.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+impulsive_burn_period.Results.Add('Maneuver/DeltaV');
 
 
 %% Configure TS - Target Rendezvous
@@ -412,6 +417,7 @@ impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCa
 % Configure results for target sequence - Period around sun and speed rel. to asteroid
 impulsive_burn_match_speed.Results.Add('Spherical Elems/V Mag');
 impulsive_burn_match_speed.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+impulsive_burn_match_speed.Results.Add('Maneuver/DeltaV');
 
 
 %% Configure TS - Target Rendezvous
