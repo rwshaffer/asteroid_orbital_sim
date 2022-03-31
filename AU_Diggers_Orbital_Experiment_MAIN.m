@@ -1,6 +1,5 @@
 %% Documentation and clear/clc
 %AU Digger Orbital Simulation Experiment MAIN
-%02/05/2022 Alexander Petsopoulos
 %Much of this script is adapted from AGI's
 %'STK_Matlab_Object_Test.m'
 
