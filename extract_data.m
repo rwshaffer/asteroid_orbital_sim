@@ -22,9 +22,5 @@ for i = 0:MCS_items-1
     end
     dataTable = deltaV;
 end
-<<<<<<< Updated upstream:save_data.m
-    disp(['Total deltaV for this Trajectory is: ' num2str(deltaV) 'km/s.'])
-=======
-deltaV = item.IAgVAStateCalcMCSDeltaV;
+disp(['Total deltaV for this Trajectory is: ' num2str(deltaV) 'km/s.'])
 end
->>>>>>> Stashed changes:extract_data.m
