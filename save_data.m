@@ -17,4 +17,6 @@ for i = 0:MCS_items-1
     end
 end
 dataTable = 1;
+deltaVIAgVAStateCalcMCSDeltaV;
+%deltaV calc "AgVAStateCalcMCSDeltaV Object"
 end
