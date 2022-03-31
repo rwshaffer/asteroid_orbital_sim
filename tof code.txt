@@ -1,0 +1,12 @@
+ts = ASTG.MainSequence.Item(0);
+first_segment = ts.Segments.Item(0);
+first_segment.InitialState.Epoch;
+
+
+
+
+num_ts = ASTG.MainSequence.Count;
+final_ts = ASTG.MainSequence.Item(num_ts - 2);
+num_segments = final_ts.Segments.Count;
+final_segment = final_ts.Segments.Item(num_segments-2);
+final_segment.FinalState.Epoch;
