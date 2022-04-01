@@ -16,7 +16,7 @@ function [ts,dc] = increase_step_sizes(ts,dc)
 fprintf('Action: increasing step sizes for any Duration/Epoch controls\n')
 
 %% List of control parameters to increase step sizes for, and corresponding scaling factors
-params = ['Epoch','Duration'];
+params = ["Epoch","Duration"];
 scale_factors = [5,5];
 
 %% Find Epoch and Duration stopping conditions among the control parameters

@@ -20,6 +20,8 @@ outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
 
 launch_date = "7 Jul 2025 07:00:00.000";
 
+mining_duration = 60; % Days
+
 asteroid_uncertainty = 0; % Percent orbit uncertainty to apply to all elements uniformly
 
 

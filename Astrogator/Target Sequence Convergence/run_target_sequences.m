@@ -4,7 +4,7 @@ function [sat,diverged] = run_target_sequences(sat)
 %% Convergence parameters to play with
 kmax = 30; % Max number of times to run a given target sequence before giving up
 consecutive_divergences_allowed = 2; % Number of RunMCS iterations that any result can diverge for before making changes
-div_threshold = 2; % Percentage of improvement that a result must see in order to not be considered "diverging"
+div_threshold = 0.5; % Percentage of improvement that a result must see in order to not be considered "diverging"
 tolerance_scale_factor = 2; % Factor by which to increase tolerance of a result
 num_tolerance_increases = 1; % Number of times it is allowed to increase a result's tolerance before moving on to
                              % more drastic measures
@@ -38,14 +38,22 @@ for i = ts_ind
         
     %% Keep track of results tolerances and achieved differences
     results_count = dc.Results.Count;
+    % Find indices of enabled results
+    enabled_results = [];
+    for result_ind = 0:results_count-1
+        if dc.Results.Item(result_ind).Enable
+            enabled_results = [enabled_results, result_ind];
+        end
+    end
+    num_results = length(enabled_results);
     
-    tolerances = zeros(1,results_count); % Initialize row vector with result tolerances
-    diffs = zeros(1,results_count); % Initialize matrix of results by RunMCS iteration
-    percent_changes = 100*ones(1,results_count); % Initialize vector of changes between RunMCS iterations
+    tolerances = zeros(1,num_results); % Initialize row vector with result tolerances
+    diffs = zeros(1,num_results); % Initialize matrix of results by RunMCS iteration
+    percent_changes = 100*ones(1,num_results); % Initialize vector of changes between RunMCS iterations
 
     % Populate tolerances vector
-    for j = 0:results_count-1
-        tolerances(j+1) = dc.Results.Item(j).Tolerance;
+    for j = 1:num_results
+        tolerances(j) = dc.Results.Item(enabled_results(j)).Tolerance;
         
     end
     
@@ -80,9 +88,10 @@ for i = ts_ind
             break
         end
         
-        %% Keep track of achieved differences on results
-        for j = 0:results_count-1
-            diffs(k,j+1) = abs(dc.Results.Item(j).Difference);
+        %% Keep track of achieved differences on enabled results
+        
+        for j = 1:num_results
+            diffs(k,j) = abs(dc.Results.Item(enabled_results(j)).Difference);
         end
 
         %% Display some output text to give info on target sequence convergence
@@ -103,7 +112,7 @@ for i = ts_ind
             disp(-percent_changes(k-1,:))
                 
             % Check whether all results improved. If so, apply the changes and skip over next analysis
-            if all(percent_changes(k-1,:) < -div_threshold)
+            if all(percent_changes(k-1,:) < -div_threshold | diffs(k,:)<tolerances)
                 ts.ApplyProfileByName("Differential Corrector"); % Assumes diff corr. is named "Differential Corrector"
 
             % If results did not all improve, more analysis needed:

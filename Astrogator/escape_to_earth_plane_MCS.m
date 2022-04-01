@@ -122,13 +122,13 @@ burn_raise_apo = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Rai
 burn_raise_apo.SetManeuverType('eVAManeuverTypeFinite');
 burn_raise_apo.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_apo.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
-burn_raise_apo.Maneuver.AttitudeControl.Az0 = -4.484;
-burn_raise_apo.Maneuver.AttitudeControl.El0 = -14.557;
+burn_raise_apo.Maneuver.AttitudeControl.Az0 = -17;
+burn_raise_apo.Maneuver.AttitudeControl.El0 = -22.7;
 
 %   Note: it appears that this defaults to spherical which is what we want. Unsure though
 % Change to correct engine and configure thrust efficiency
 burn_raise_apo.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_raise_apo.Maneuver.ThrustEfficiency = 0.776;
+burn_raise_apo.Maneuver.ThrustEfficiency = 1;
 burn_raise_apo.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
 % Configure propagator and stopping conditions - Use semimajor axis as a stopping condition
 burn_propagator = burn_raise_apo.Maneuver.Propagator;
@@ -166,11 +166,11 @@ burn_raise_peri = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Ra
 burn_raise_peri.SetManeuverType('eVAManeuverTypeFinite');
 burn_raise_peri.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_peri.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
-burn_raise_peri.Maneuver.AttitudeControl.Az0 = -10.99;
+burn_raise_peri.Maneuver.AttitudeControl.Az0 = -23.7;
 burn_raise_peri.Maneuver.AttitudeControl.El0 = 0.901;
 % Change to correct engine and configure thrust efficiency
 burn_raise_peri.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_raise_peri.Maneuver.ThrustEfficiency = 0.108;
+burn_raise_peri.Maneuver.ThrustEfficiency = 0.125;
 burn_raise_peri.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
 % Configure propagator and stopping conditions - Use descending node as a stopping condition
 burn_propagator = burn_raise_peri.Maneuver.Propagator;
@@ -201,7 +201,7 @@ dc = ts_ast_orbit.Profiles.Item('Differential Corrector');
 % Configure Thrust Efficiency control parameters - change their max steps & perturbations
 burn1eff_control = dc.ControlParameters.GetControlByPaths('Burn_Raise_Apoapsis','FiniteMnvr.Thrusting.ThrustEfficiency');
 burn1eff_control.Enable = true;
-burn1eff_control.MaxStep = 0.005;
+burn1eff_control.MaxStep = 0.01;
 burn1eff_control.Perturbation = 0.0001;
 burn2eff_control = dc.ControlParameters.GetControlByPaths('Burn_Raise_Periapsis','FiniteMnvr.Thrusting.ThrustEfficiency');
 burn2eff_control.Enable = true;
@@ -253,9 +253,9 @@ impulsive_burn = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Impulsive Bur
 impulsive_burn.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
 impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
 impulsive_burn.Maneuver.AttitudeControl.CoordType = 'eVASphericalImpDeltaV';
-impulsive_burn.Maneuver.AttitudeControl.Azimuth = 207.7;
-impulsive_burn.Maneuver.AttitudeControl.Elevation = 26.8373;
-impulsive_burn.Maneuver.AttitudeControl.Magnitude = 190;
+impulsive_burn.Maneuver.AttitudeControl.Azimuth = 172;
+impulsive_burn.Maneuver.AttitudeControl.Elevation = 21.4;
+impulsive_burn.Maneuver.AttitudeControl.Magnitude = 330;
 impulsive_burn.Maneuver.AttitudeControl.AllowNegativeSphericalMagnitude = 1;
 impulsive_burn.Results.Add('Maneuver/DeltaV');
 % Configure control parameters for target sequence
@@ -270,9 +270,9 @@ burn_close_app = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Burn Close Ap
 % Change to Finite and set attitude thrust vector
 burn_close_app.SetManeuverType('eVAManeuverTypeFinite');
 burn_close_app.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
-burn_close_app.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
-burn_close_app.Maneuver.AttitudeControl.Az0 = 153.255;
-burn_close_app.Maneuver.AttitudeControl.El0 = 6.83;
+burn_close_app.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
+burn_close_app.Maneuver.AttitudeControl.Az0 = 196.255;
+burn_close_app.Maneuver.AttitudeControl.El0 = 7.187;
 %burn_close_app.Maneuver.AttitudeControl.
 % Change to correct engine and configure thrust efficiency
 burn_close_app.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
@@ -285,7 +285,7 @@ burn_propagator.MaxPropagationTime = 86400*300;
 burn_propagator.StoppingConditions.Add('Epoch');
 burn_propagator.StoppingConditions.Remove('Duration');
 epoch_stop = burn_propagator.StoppingConditions.Item('Epoch');
-epoch_stop.Properties.Trip = "17 Nov 2026 07:43:00.000";
+epoch_stop.Properties.Trip = "5 Nov 2026 07:43:00.000";
 % Set control parameters for target sequence
 burn_close_app.EnableControlParameter('eVAControlManeuverFiniteAz0');
 burn_close_app.EnableControlParameter('eVAControlManeuverFiniteEl0');
@@ -307,7 +307,7 @@ dc = ts_rdvs.Profiles.Item('Differential Corrector');
 % Configure final Epoch control parameter - change max step
 epoch_control = dc.ControlParameters.GetControlByPaths('Burn_Close_Approach','FiniteMnvr.StoppingConditions.Epoch.TripValue');
 epoch_control.Enable = true;
-epoch_control.MaxStep = 5000;
+epoch_control.MaxStep = 10000;
 % Enable impulsive maneuver controls (no special configurations)
 impulsive_string = 'ImpulsiveMnvr.Pointing.Spherical';
 dc.ControlParameters.GetControlByPaths('Impulsive_Burn',sprintf('%s.Azimuth',impulsive_string)).Enable = true;
@@ -324,7 +324,7 @@ period_result.DesiredValue = ML.period; % Note: in seconds
 period_result.Tolerance = 0.75 * 86400; % 0.75 days, converted to seconds
 rmag_result = dc.Results.GetResultByPaths('Burn_Close_Approach','R_Mag');
 rmag_result.Enable = true;
-rmag_result.Tolerance = 15400;
+rmag_result.Tolerance = 45000;
 vmag_result = dc.Results.GetResultByPaths('Burn_Close_Approach','V_Mag');
 vmag_result.Enable = true;
 vmag_result.Tolerance = 0.1;
@@ -347,7 +347,7 @@ ts_period = MCS.Insert('eVASegmentTypeTargetSequence','Target Orbital Period','-
 impulsive_burn_period = ts_period.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn Match Period','-');
 % Set attitude thrust vector and magnitude
 impulsive_burn_period.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
-impulsive_burn_period.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn_period.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
 impulsive_burn_period.Maneuver.AttitudeControl.CoordType = 'eVACartesianImpDeltaV';
 impulsive_burn_period.Maneuver.AttitudeControl.X = -24.9;
 impulsive_burn_period.Maneuver.AttitudeControl.Y = 2.51;
@@ -383,9 +383,9 @@ period_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Period','Orbit
 period_result.Enable = true;
 period_result.DesiredValue = ML.period; % Note: in seconds
 period_result.Tolerance = 10; % Match 1989 ML orbital period to within 10 seconds
-vmag_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Period','V_Mag');
-vmag_result.Enable = true;
-vmag_result.Tolerance = 0.005; % Note: in km/s
+%vmag_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Period','V_Mag');
+%vmag_result.Enable = true;
+%vmag_result.Tolerance = 0.005; % Note: in km/s
 % Set final DC and targeter properties and run modes
 dc.MaxIterations = 50;
 dc.EnableDisplayStatus = true;
@@ -405,7 +405,7 @@ ts_proxops = MCS.Insert('eVASegmentTypeTargetSequence','Target Prox Ops','-');
 impulsive_burn_match_speed = ts_proxops.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn Match Speed','-');
 % Set attitude thrust vector and magnitude
 impulsive_burn_match_speed.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
-impulsive_burn_match_speed.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn_match_speed.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
 impulsive_burn_match_speed.Maneuver.AttitudeControl.CoordType = 'eVACartesianImpDeltaV';
 impulsive_burn_match_speed.Maneuver.AttitudeControl.X = -7.035;
 impulsive_burn_match_speed.Maneuver.AttitudeControl.Y = -0.05;
@@ -417,6 +417,8 @@ impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCa
 % Configure results for target sequence - Period around sun and speed rel. to asteroid
 impulsive_burn_match_speed.Results.Add('Spherical Elems/V Mag');
 impulsive_burn_match_speed.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_ML J2000';
+impulsive_burn_match_speed.Results.Add('Keplerian Elems/Orbit_Period');
+impulsive_burn_match_speed.Results.Item('Orbit_Period').CentralBodyName = 'Sun';
 impulsive_burn_match_speed.Results.Add('Maneuver/DeltaV');
 
 
@@ -440,7 +442,11 @@ z_control. Perturbation = 0.001;
 % Enable results and configure tolerances
 velocity_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Speed','V_Mag');
 velocity_result.Enable = true;
-velocity_result.Tolerance = 3e-3;
+velocity_result.Tolerance = 10e-3;
+period_result = dc.Results.GetResultByPaths('Impulsive_Burn_Match_Speed','Orbit_Period');
+period_result.Enable = true;
+period_result.DesiredValue = ML.period; % Note: in seconds
+period_result.Tolerance = 1000; % 0.75 days, converted to seconds
 % Set final DC and targeter properties and run modes
 dc.MaxIterations = 50;
 dc.EnableDisplayStatus = true;
