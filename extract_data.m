@@ -45,7 +45,7 @@ ToF.Format = 'd';
 ToF_String = char(ToF, 'd');
 
 %format data for output
-dataTable = [deltaV; ToF];
+dataTable = [deltaV; days(ToF)];
 disp(['Total Delta-V for this trajectory is: ' num2str(deltaV) 'km/s.'])
 disp(['The time of flight for this trajectory is: ' ToF_String '.'])
 end
