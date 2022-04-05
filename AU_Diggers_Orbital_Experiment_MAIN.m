@@ -17,11 +17,13 @@ clear, clc
 
 %% User Inputs
 
-outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
-
-launch_dates = ["7 Jul 2025 07:00:00.000","16 Jul 2025 07:00:00.000"];
+launch_dates = ["7 Jul 2025 07:00:00.000",...
+                "16 Jul 2025 07:00:00.000"];
 
 mining_durations = [482,500]; % Days
+
+
+outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
 
 asteroid_uncertainty = 0; % Percent orbit uncertainty to apply to all elements uniformly
 
@@ -216,8 +218,11 @@ disp(outputTable)
 % Write outputs to Excel
 %writetable(outputTable);
 filename = 'Output Data.xlsx';
-writetable(outputTable,filename);
-
+save_data = input('Enter "y" to save data. Warning: this deletes all other entries in file!\n',"s");
+if save_data == 'y'
+    writetable(outputTable,filename,'WriteMode','replacefile');
+    fprintf('Saved!\n')
+end
 
 
 

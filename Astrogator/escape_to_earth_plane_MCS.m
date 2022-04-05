@@ -30,6 +30,7 @@ initstate.SetElementType('eVAElementTypeTargetVectorOutgoingAsymptote');
 initstate.OrbitEpoch = launch_date;
 initstate.Element.RadiusofPeriapsis = 6778.14;
 initstate.Element.C3Energy = 5.01067;
+%initstate.Element.C3Energy = 3;
 initstate.Element.RAOutgoing = 3.41985;
 initstate.Element.DeclinationOutgoing = -61.8156;
 initstate.Element.VelocityAzimuthPeriapsis = 0;
