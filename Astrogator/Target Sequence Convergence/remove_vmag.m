@@ -1,4 +1,4 @@
-function [dc,disabled_vmag] = remove_vmag(dc)
+function [ts,dc,disabled_vmag] = remove_vmag(ts,dc)
 
 %% Find and disable any V Mag results in a target sequence
 
@@ -12,5 +12,9 @@ for j = 0:results_count-1
         fprintf("Disabling Result %d, V Mag\n\n",j)
     end
 end
+
+% Reset target sequence to last time it had all results improve
+ts.ResetProfileByName("Differential Corrector");
+
 
 end

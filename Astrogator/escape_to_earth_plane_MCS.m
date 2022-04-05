@@ -98,7 +98,7 @@ inc_result = dc.Results.GetResultByPaths('Exit Earth SOI','Inclination');
 inc_result.Enable = true;
 inc_result.DesiredValue = ML.inc;
 raan_result = dc.Results.GetResultByPaths('Exit Earth SOI','RAAN');
-raan_result.Enable = true;
+%raan_result.Enable = true;
 raan_result.DesiredValue = ML.raan;
 % Set final DC and targeter properties and run modes
 dc.MaxIterations = 50;

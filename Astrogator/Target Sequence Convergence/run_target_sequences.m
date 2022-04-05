@@ -147,7 +147,7 @@ for i = ts_ind
                     
                     % Check whether V Mag is an enabled result and is converged - if so, disable it
                     if ~isnan(vmag_index) && ~action_needed(vmag_index) && dc.Results.Item(enabled_results(vmag_index)).Enable
-                        [dc,disabled_vmag] = remove_vmag(dc);
+                        [ts,dc,disabled_vmag] = remove_vmag(ts,dc);
                     
                     % Check whether step sizes have already been changed
                     elseif ~steps_already_changed
