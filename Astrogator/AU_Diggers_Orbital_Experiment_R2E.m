@@ -6,8 +6,13 @@ ASTG = sat.Propagator;
 ASTG.Options.DrawTrajectoryIn3D = 0; % Turn off drawing trajectory while calculating
 
 MCS = ASTG.MainSequence;
+% If this isn't the first return trajectory, we must remove the return target sequence already in the MCS
+try
+    MCS.Remove('Target Return to Earth')
+end
+
 %% TARGET SEQUENCE: Return to Earth
-ts_R2E = MCS.Insert('eVASegmentTypeTargetSequence','Return to Earth','-');
+ts_R2E = MCS.Insert('eVASegmentTypeTargetSequence','Target Return to Earth','-');
 %% PROPAGATE: Proximity Operations
 prox_ops = ts_R2E.Segments.Insert('eVASegmentTypePropagate','Proximity Operations','-');
 prox_ops.PropagatorName = 'Heliocentric';
