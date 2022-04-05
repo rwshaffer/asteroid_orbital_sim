@@ -1,4 +1,4 @@
-function [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,num_IC_changes,nominal_vals,IC_scales)
+function [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,IC_changed,nominal_vals,IC_scales)
 
 %% Randomly change some of the variables in the target sequence
 % (can be control variables in the diff. corrector, but maybe don't have to be?)
@@ -12,10 +12,10 @@ num_segments = ts.Segments.Count;
 
 %% Handle the "initial" initial conditions - i.e., the ones hard-coded in
 % If this is the first time changing IC's, store IC's as nominal
-if num_IC_changes == 0
+if IC_changed == 0
     ii = 0; % Number of variables that have been added
     
-    for j = 0:num_segments
+    for j = 0:num_segments-1
         segment = ts.Segments.Item(j);
         if segment.Type == "eVASegmentTypeManeuver"
             if segment.ManeuverType == "eVAManeuverTypeImpulsive"
@@ -39,7 +39,7 @@ if num_IC_changes == 0
                     IC_scales(ii) = 0.5;
                 end
             elseif segment.ManeuverType == "eVAManeuverTypeFinite"
-                fin_mnvr = segment.Manveuver;
+                fin_mnvr = segment.Maneuver;
                 % Finite maneuver thrust efficiency will be varied
                 ii = ii + 1;
                 nominal_vals(ii) = fin_mnvr.ThrustEfficiency;
@@ -56,7 +56,7 @@ if num_IC_changes == 0
                     % Store the value as a Julian Date (for now)
                     date = stopping_cond.Properties.Trip;
                     dateFormatString = 'd MMM yyyy H:mm:ss.SSS';
-                    nominal_vals(ii) = juliandate(datetime(t0, 'InputFormat', dateFormatString));
+                    nominal_vals(ii) = juliandate(datetime(date, 'InputFormat', dateFormatString));
                     IC_scales(ii) = 0.00002;
                 end
                 
@@ -74,12 +74,13 @@ if num_IC_changes == 0
                 % Store the value as a Julian Date (for now)
                 date = stopping_cond.Properties.Trip;
                 dateFormatString = 'd MMM yyyy H:mm:ss.SSS';
-                nominal_vals(ii) = juliandate(datetime(t0, 'InputFormat', dateFormatString));
+                nominal_vals(ii) = juliandate(datetime(date, 'InputFormat', dateFormatString));
                 IC_scales(ii) = 0.00002;
             end
         end
     end
-
+else
+    ii = length(nominal_vals);
 end
 
 
@@ -102,7 +103,7 @@ end
 % nominal values/scale factors for each variable
 ii = 0; % Reset counter
 
-for j = 0:num_segments
+for j = 0:num_segments-1
     segment = ts.Segments.Item(j);
     if segment.Type == "eVASegmentTypeManeuver"
         if segment.ManeuverType == "eVAManeuverTypeImpulsive"
@@ -122,7 +123,7 @@ for j = 0:num_segments
                 imp_mnvr.AttitudeControl.Z = new_vals(ii);
             end
         elseif segment.ManeuverType == "eVAManeuverTypeFinite"
-            fin_mnvr = segment.Manveuver;
+            fin_mnvr = segment.Maneuver;
             % Finite maneuver thrust efficiency will be varied
             ii = ii + 1;
             fin_mnvr.ThrustEfficiency = new_vals(ii);
@@ -136,7 +137,7 @@ for j = 0:num_segments
                 ii = ii + 1;
                 % Store the value as a Julian Date (for now)
                 % STILL NEED TO FIGURE THIS PART OUT!!!
-                stopping_cond.Properties.Trip = nominal_vals(ii);
+                %stopping_cond.Properties.Trip = nominal_vals(ii);
                 
             end
 
@@ -152,13 +153,14 @@ for j = 0:num_segments
             ii = ii + 1;
             % Store the value as a Julian Date (for now)
             % STILL NEED TO FIGURE THIS PART OUT!!!
-            stopping_cond.Properties.Trip = nominal_vals(ii);
+            %stopping_cond.Properties.Trip = nominal_vals(ii);
         end
     end
 end
 
 
-
+% Reset target sequence to last time it had all results improve
+ts.ResetProfileByName("Differential Corrector");
 
 
 

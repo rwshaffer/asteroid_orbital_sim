@@ -63,6 +63,8 @@ for i = ts_ind
     tol_increased = zeros(1,results_count); % Initialize vector used to track whenever a result
                                                     % tolerance is increased due to divergence 
     IC_changed = 0;
+    nominal_vals = [];
+    IC_scales = [];
     
     disabled_vmag = false;
     vmag_index = nan;
@@ -142,8 +144,6 @@ for i = ts_ind
                 
                 %% Handle corrective actions to allow the Target Sequence to converge
                 if any(action_needed) 
-                    % Reset target sequence to last time it had all results improve
-                    ts.ResetProfileByName("Differential Corrector");
                     
                     % Check whether V Mag is an enabled result and is converged - if so, disable it
                     if ~isnan(vmag_index) && ~action_needed(vmag_index) && dc.Results.Item(enabled_results(vmag_index)).Enable
@@ -169,7 +169,7 @@ for i = ts_ind
                     % Check whether initial conditions have been changed more than allowed
                     elseif IC_changed < num_IC_changes
                         % Randomize some initial conditions within the target sequence
-                        [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,num_IC_changes,nominal_vals,IC_scales);
+                        [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,IC_changed,nominal_vals,IC_scales);
                         IC_changed = IC_changed + 1; % Update counter on number of times this has been done
    
                         
