@@ -143,12 +143,16 @@ for ii = 1:numberOfTrajectories
     end
     
     %% Extracting data
-    dataTable(:,ii) = extract_data(sat);
+    dataTable(:,ii) = extract_data(sat)';
 end
 
 %% Saving Data
-DeltaV = dataTable(1,:)';
-TimeOfFlightInDays = dataTable(2,:)';
-outputTable = table(DeltaV, TimeOfFlightInDays);
+OutboundFinDV = dataTable(1,:)';
+OutboundImpDV = dataTable(2,:)';
+ReturnDV = dataTable(3,:)';
+MaxThrust = dataTable(4,:)';
+C3Energy = dataTable(5,:)';
+TimeOfFlightInDays = dataTable(6,:)';
+outputTable = table(OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,TimeOfFlightInDays);
 writetable(outputTable);
 disp(outputTable)
