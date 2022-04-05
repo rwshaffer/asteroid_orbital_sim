@@ -3,10 +3,10 @@ function [sat,diverged] = run_target_sequences(sat)
 
 %% Convergence parameters to play with
 kmax = 30; % Max number of times to run a given target sequence before giving up
-consecutive_divergences_allowed = 2; % Number of RunMCS iterations that any result can diverge for before making changes
+consecutive_divergences_allowed = 1; % Number of RunMCS iterations that any result can diverge for before making changes
 div_threshold = 0.5; % Percentage of improvement that a result must see in order to not be considered "diverging"
 tolerance_scale_factor = 2; % Factor by which to increase tolerance of a result
-num_tolerance_increases = 1; % Number of times it is allowed to increase a result's tolerance before moving on to
+max_tolerance_increases = 1; % Number of times it is allowed to increase a result's tolerance before moving on to
                              % more drastic measures
 num_IC_changes = 4; % Number of times a TS will have initial conditions randomized if step size increase fails
 
@@ -63,6 +63,14 @@ for i = ts_ind
     tol_increased = zeros(1,results_count); % Initialize vector used to track whenever a result
                                                     % tolerance is increased due to divergence 
     IC_changed = 0;
+    
+    disabled_vmag = false;
+    vmag_index = nan;
+    for j = 1:num_results
+        if dc.Results.Item(enabled_results(j)).Name == "V Mag"
+            vmag_index = j;
+        end
+    end
                                                     
     %% Repeatedly run MCS and keep track of results
     k = 0; % Track number of "RunMCS" iterations
@@ -74,9 +82,14 @@ for i = ts_ind
         status = dc.Status; % Resulting status of diff. corrector after latest MCS run
         switch status
             case "Converged"
-                converged = true;
-                fprintf('Target Sequence %d, Iteration %d: Converged\n\n',i+1,k)
-                break
+                % First check if a result (like V Mag) was disabled
+                if disabled_vmag
+                   [dc,disabled_vmag] = enable_vmag(dc); 
+                else
+                    converged = true;
+                    fprintf('Target Sequence %d, Iteration %d: Converged\n\n',i+1,k)
+                    break
+                end
             case "Encountered an Error"
                 diverged = true;
                 fprintf('Target Sequence %d, Iteration %d: ERROR\n\n',i+1,k)
@@ -132,8 +145,12 @@ for i = ts_ind
                     % Reset target sequence to last time it had all results improve
                     ts.ResetProfileByName("Differential Corrector");
                     
+                    % Check whether V Mag is an enabled result and is converged - if so, disable it
+                    if ~isnan(vmag_index) && ~action_needed(vmag_index) && dc.Results.Item(enabled_results(vmag_index)).Enable
+                        [dc,disabled_vmag] = remove_vmag(dc);
+                    
                     % Check whether step sizes have already been changed
-                    if ~steps_already_changed
+                    elseif ~steps_already_changed
                         % Increase step sizes on duration and epoch stopping conditions within TS
                         [ts,dc] = increase_step_sizes(ts,dc); % Increase relevant step sizes
                         steps_already_changed = true; % Only change step sizes X number of times
@@ -146,13 +163,13 @@ for i = ts_ind
                         tolerance_info.max_tolerance_increases = max_tolerance_increases;
                         tolerance_info.tolerance_scale_factor = tolerance_scale_factor;
                         % Increase tolerances on results that are struggling to converge
-                        [ts,dc,tolerances,tolerance_info,keep_changing_tolerances] = increase_tolerances(ts,dc,tolerances,tolerance_info,action_needed);
-                 
+                        [ts,dc,tolerances,tolerance_info,keep_changing_tolerances] = increase_tolerances(ts,dc,tolerances,tolerance_info,action_needed,enabled_results);
+                        tol_increased = tolerance_info.tol_increased;
                         
                     % Check whether initial conditions have been changed more than allowed
                     elseif IC_changed < num_IC_changes
                         % Randomize some initial conditions within the target sequence
-                        [ts,dc] = change_init_conditions(ts,dc);
+                        [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,num_IC_changes,nominal_vals,IC_scales);
                         IC_changed = IC_changed + 1; % Update counter on number of times this has been done
    
                         

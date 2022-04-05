@@ -13,10 +13,10 @@ function [ts,dc] = increase_step_sizes(ts,dc)
 % dc: Updated Differential Corrector object within Target Sequence
 
 
-fprintf('Action: increasing step sizes for any Duration/Epoch controls\n')
+fprintf('Action: increasing step sizes for any Duration/Epoch controls\n\n')
 
 %% List of control parameters to increase step sizes for, and corresponding scaling factors
-params = ["Epoch","Duration"];
+params = ["Epoch.TripValue","Duration.TripValue"];
 scale_factors = [5,5];
 
 %% Find Epoch and Duration stopping conditions among the control parameters
@@ -31,10 +31,10 @@ for i = 0:controls_count-1
     % Iterate through parameters of interest to see if this control parameter is one of them
     for j = 1:length(params) 
         
-        param_word_length = length(params(j)); % Length of word at end of control_name to check for
+        param_word_length = length(char(params(j))); % Length of word at end of control_name to check for
         
         % Check whether the ending string of the control_name is the parameter name
-        if control_name(name_length-(param_word_length-1):end) == params(j) 
+        if control_name(name_length-(param_word_length-1):end) == params(j)
             % Scale the control's max step based on the specified scaling factor
             control.MaxStep = control.MaxStep * scale_factors(j);
         end

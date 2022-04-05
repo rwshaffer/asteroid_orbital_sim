@@ -122,8 +122,8 @@ burn_raise_apo = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Rai
 burn_raise_apo.SetManeuverType('eVAManeuverTypeFinite');
 burn_raise_apo.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_apo.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
-burn_raise_apo.Maneuver.AttitudeControl.Az0 = -17;
-burn_raise_apo.Maneuver.AttitudeControl.El0 = -22.7;
+burn_raise_apo.Maneuver.AttitudeControl.Az0 = -20.5446;
+burn_raise_apo.Maneuver.AttitudeControl.El0 = -24.896;
 
 %   Note: it appears that this defaults to spherical which is what we want. Unsure though
 % Change to correct engine and configure thrust efficiency
@@ -139,7 +139,7 @@ burn_propagator.StoppingConditions.Remove('Duration');
 sma_stop = burn_propagator.StoppingConditions.Item('UserSelect');
 sma_stop.Properties.UserCalcObjectName = 'Semimajor Axis';
 sma_stop.Properties.UserCalcObject.CentralBodyName = 'Sun';
-sma_stop.Properties.Trip = 1.78742e+08;
+sma_stop.Properties.Trip = 1.78571e+08;
 burn_raise_apo.Results.Add('Maneuver/DeltaV');
 % Set control parameters for target sequence
 burn_raise_apo.EnableControlParameter('eVAControlManeuverFiniteAz0');
@@ -166,11 +166,11 @@ burn_raise_peri = ts_ast_orbit.Segments.Insert('eVASegmentTypeManeuver','Burn Ra
 burn_raise_peri.SetManeuverType('eVAManeuverTypeFinite');
 burn_raise_peri.Maneuver.SetAttitudeControlType('eVAAttitudeControlTimeVarying');
 burn_raise_peri.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
-burn_raise_peri.Maneuver.AttitudeControl.Az0 = -23.7;
-burn_raise_peri.Maneuver.AttitudeControl.El0 = 0.901;
+burn_raise_peri.Maneuver.AttitudeControl.Az0 = -26.6304;
+burn_raise_peri.Maneuver.AttitudeControl.El0 = 0.89916;
 % Change to correct engine and configure thrust efficiency
 burn_raise_peri.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_raise_peri.Maneuver.ThrustEfficiency = 0.125;
+burn_raise_peri.Maneuver.ThrustEfficiency = 0.128176;
 burn_raise_peri.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
 % Configure propagator and stopping conditions - Use descending node as a stopping condition
 burn_propagator = burn_raise_peri.Maneuver.Propagator;
@@ -227,7 +227,7 @@ delta_ra_result.Enable = true;
 delta_ra_result.Tolerance = 0.05;
 rmag_result = dc.Results.GetResultByPaths('Burn_Raise_Periapsis','R_Mag');
 rmag_result.Enable = true;
-rmag_result.Tolerance = 1.5e5;
+rmag_result.Tolerance = 1e5;
 vmag_result = dc.Results.GetResultByPaths('Burn_Raise_Periapsis','V_Mag');
 vmag_result.Enable = true;
 vmag_result.Tolerance = 0.45;
@@ -251,7 +251,7 @@ ts_rdvs = MCS.Insert('eVASegmentTypeTargetSequence','Target Rendezvous','-');
 impulsive_burn = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn','-');
 % Set attitude thrust vector and magnitude
 impulsive_burn.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
-impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
+impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
 impulsive_burn.Maneuver.AttitudeControl.CoordType = 'eVASphericalImpDeltaV';
 impulsive_burn.Maneuver.AttitudeControl.Azimuth = 172;
 impulsive_burn.Maneuver.AttitudeControl.Elevation = 21.4;
