@@ -251,11 +251,11 @@ ts_rdvs = MCS.Insert('eVASegmentTypeTargetSequence','Target Rendezvous','-');
 impulsive_burn = ts_rdvs.Segments.Insert('eVASegmentTypeManeuver','Impulsive Burn','-');
 % Set attitude thrust vector and magnitude
 impulsive_burn.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
-impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
+impulsive_burn.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite/AU_Digger_Sat VNC(1989_ML)';
 impulsive_burn.Maneuver.AttitudeControl.CoordType = 'eVASphericalImpDeltaV';
-impulsive_burn.Maneuver.AttitudeControl.Azimuth = 172;
-impulsive_burn.Maneuver.AttitudeControl.Elevation = 21.4;
-impulsive_burn.Maneuver.AttitudeControl.Magnitude = 330;
+impulsive_burn.Maneuver.AttitudeControl.Azimuth = 201.9;
+impulsive_burn.Maneuver.AttitudeControl.Elevation = 2.24;
+impulsive_burn.Maneuver.AttitudeControl.Magnitude = 79.4;
 impulsive_burn.Maneuver.AttitudeControl.AllowNegativeSphericalMagnitude = 1;
 impulsive_burn.Results.Add('Maneuver/DeltaV');
 % Configure control parameters for target sequence
@@ -276,7 +276,7 @@ burn_close_app.Maneuver.AttitudeControl.El0 = 7.187;
 %burn_close_app.Maneuver.AttitudeControl.
 % Change to correct engine and configure thrust efficiency
 burn_close_app.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
-burn_close_app.Maneuver.ThrustEfficiency = 0.5;
+burn_close_app.Maneuver.ThrustEfficiency = 0.7;
 burn_close_app.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
 % Configure propagator and stopping conditions - Use Epoch as a stopping condition
 burn_propagator = burn_close_app.Maneuver.Propagator;
@@ -322,6 +322,8 @@ period_result = dc.Results.GetResultByPaths('Burn_Close_Approach','Orbit_Period'
 period_result.Enable = true;
 period_result.DesiredValue = ML.period; % Note: in seconds
 period_result.Tolerance = 0.75 * 86400; % 0.75 days, converted to seconds
+period_result.UseCustomDisplayUnit = 1;
+period_result.CustomDisplayUnit = 'day'
 rmag_result = dc.Results.GetResultByPaths('Burn_Close_Approach','R_Mag');
 rmag_result.Enable = true;
 rmag_result.Tolerance = 45000;
@@ -349,7 +351,7 @@ impulsive_burn_period = ts_period.Segments.Insert('eVASegmentTypeManeuver','Impu
 impulsive_burn_period.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
 impulsive_burn_period.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
 impulsive_burn_period.Maneuver.AttitudeControl.CoordType = 'eVACartesianImpDeltaV';
-impulsive_burn_period.Maneuver.AttitudeControl.X = -24.9;
+impulsive_burn_period.Maneuver.AttitudeControl.X = 6.89;
 impulsive_burn_period.Maneuver.AttitudeControl.Y = 2.51;
 impulsive_burn_period.Maneuver.AttitudeControl.Z = 4.74;
 % Configure control parameters for target sequence
@@ -364,7 +366,7 @@ impulsive_burn_period.Results.Item('V_Mag').CoordSystemName = 'CentralBody/1989_
 impulsive_burn_period.Results.Add('Maneuver/DeltaV');
 
 
-%% Configure TS - Target Rendezvous
+%% Configure TS - Target Orbital Period
 % Get handle to differential corrector used in target sequence
 dc = ts_period.Profiles.Item('Differential Corrector');
 % Enable impulsive maneuver controls and decrease perturbations
@@ -407,9 +409,9 @@ impulsive_burn_match_speed = ts_proxops.Segments.Insert('eVASegmentTypeManeuver'
 impulsive_burn_match_speed.Maneuver.SetAttitudeControlType('eVAAttitudeControlThrustVector');
 impulsive_burn_match_speed.Maneuver.AttitudeControl.ThrustAxesName = 'Satellite VNC(Sun)';
 impulsive_burn_match_speed.Maneuver.AttitudeControl.CoordType = 'eVACartesianImpDeltaV';
-impulsive_burn_match_speed.Maneuver.AttitudeControl.X = -7.035;
-impulsive_burn_match_speed.Maneuver.AttitudeControl.Y = -0.05;
-impulsive_burn_match_speed.Maneuver.AttitudeControl.Z = -0.05;
+impulsive_burn_match_speed.Maneuver.AttitudeControl.X = 0.089;
+impulsive_burn_match_speed.Maneuver.AttitudeControl.Y = -17.92;
+impulsive_burn_match_speed.Maneuver.AttitudeControl.Z = 24.54;
 % Configure control parameters for target sequence
 impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCartesianX');
 impulsive_burn_match_speed.EnableControlParameter('eVAControlManeuverImpulsiveCartesianY');

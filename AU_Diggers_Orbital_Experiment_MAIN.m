@@ -12,7 +12,7 @@
 
 % inputVec will be the vector of inputs, taking data from Terelle's GUI
 clear, clc
-numberOfTrajectories = 2;
+numberOfTrajectories = 1;
 dataTable = zeros(2,numberOfTrajectories);
 
 for ii = 1:numberOfTrajectories
