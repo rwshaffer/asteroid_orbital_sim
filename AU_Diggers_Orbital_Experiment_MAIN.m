@@ -24,7 +24,7 @@ for ii = 1:numberOfTrajectories
     
     launch_date = "7 Jul 2025 07:00:00.000";
     
-    mining_duration = 60; % Days
+    mining_duration = 482; % Days
     
     asteroid_uncertainty = 0; % Percent orbit uncertainty to apply to all elements uniformly
     
@@ -134,9 +134,13 @@ for ii = 1:numberOfTrajectories
     %% 6. Build Mission Control Sequence for satellite based on user inputs
     switch outbound_traj
         case 'Direct'
-            sat = escape_to_earth_plane_MCS(ML,sat,launch_date);
+            [sat,diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date);
     end
-    
+    % Assuming outbound traj. converged, build in the return trajectory
+    if ~diverged
+        fprintf('Outbound trajectory converged! Running return trajectory(s):\n\n')
+        [sat,diverged] = AU_Diggers_Orbital_Experiment_R2E(sat,mining_duration);
+    end
     
     %% Extracting data
     dataTable(:,ii) = extract_data(sat);

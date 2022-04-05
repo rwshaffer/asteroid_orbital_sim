@@ -10,12 +10,12 @@ for i = 0:MCS_items-1
     if item.Type == "eVASegmentTypeTargetSequence"
         countTS = item.Segments.Count;
         %% Check if the segments are maneuvers
-        for jj = 0:length(countTS)
+        for jj = 0:countTS-1
             segment = item.Segments.Item(jj); % Gives you the first item within the target sequence
             % code to check whether "segment" is a maneuver here
-            isManeuver(i+1,jj+1) = (segment.Type == "eVASegmentTypeManeuver");
+            isManeuver = (segment.Type == "eVASegmentTypeManeuver");
             
-            if isManeuver(i+1, jj+1)
+            if isManeuver
                 deltaV = deltaV + segment.GetResultValue('DeltaV');
             end
         end
