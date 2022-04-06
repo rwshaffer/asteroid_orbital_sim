@@ -7,6 +7,9 @@ function [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,IC_change
 % - Impulsive maneuver magnitude
 % - Epoch/Duration stopping conditions
 
+% Reset target sequence to last time it had all results improve
+ts.ResetProfileByName("Differential Corrector");
+
 
 num_segments = ts.Segments.Count;
 
@@ -158,9 +161,6 @@ for j = 0:num_segments-1
     end
 end
 
-
-% Reset target sequence to last time it had all results improve
-ts.ResetProfileByName("Differential Corrector");
 
 
 

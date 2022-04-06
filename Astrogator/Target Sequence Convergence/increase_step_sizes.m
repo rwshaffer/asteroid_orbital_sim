@@ -17,7 +17,7 @@ fprintf('Action: increasing step sizes for any Duration/Epoch controls\n\n')
 
 %% List of control parameters to increase step sizes for, and corresponding scaling factors
 params = ["Epoch.TripValue","Duration.TripValue"];
-scale_factors = [5,5];
+scale_factors = [2,2];
 
 %% Find Epoch and Duration stopping conditions among the control parameters
 controls_count = dc.ControlParameters.Count; % All parameters used in target sequence

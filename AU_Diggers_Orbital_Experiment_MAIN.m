@@ -132,7 +132,7 @@ vncML.TrajectoryAxesType = 'eCrdnTrajectoryAxesVVLH';
 %% --------------------------------------------------------------------- %%
 % Set up results table
 numTrajectories = length(launch_dates) * length(mining_durations);
-numOutputs = 6; % Hard-coded, based on extract_sat.m
+numOutputs = 7; % Hard-coded, based on extract_sat.m
 dataTable = zeros(numOutputs,numTrajectories);
 
 traj_num = 0; % Keep track of all trajectories (total number of full trajectories modeled)
@@ -184,7 +184,7 @@ for i = 1:length(launch_dates)
             if ~diverged
                 %% 7. Extracting data
                 fprintf("Return trajectory converged! SUMMARY: \n")
-                dataTable(:,traj_num) = extract_data(sat)';
+                dataTable(:,traj_num) = extract_data(sat,mining_duration)';
             else
                 dataTable(:,traj_num) = nan;
             end
@@ -210,10 +210,11 @@ OutboundImpDV = dataTable(2,:)';
 ReturnDV = dataTable(3,:)';
 MaxThrust = dataTable(4,:)';
 C3Energy = dataTable(5,:)';
-TimeOfFlightInDays = dataTable(6,:)';
+OutboundTimeOfFlight = dataTable(6,:)';
+ReturnTimeOfFlight = dataTable(7,:)';
 % Consolidate inputs and outputs into a table and display it
 outputTable = table(InputLaunchDates,InputMiningDurations,InputTrajType,InputUncertainty,...
-    OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,TimeOfFlightInDays);
+    OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,OutboundTimeOfFlight,ReturnTimeOfFlight);
 disp(outputTable)
 % Write outputs to Excel
 %writetable(outputTable);

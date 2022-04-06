@@ -81,7 +81,7 @@ dc = ts_ast_plane.Profiles.Item('Differential Corrector');
 % Configure Epoch control parameter - change its max step & perturbation
 init_epoch_control = dc.ControlParameters.GetControlByPaths('Escape Periapsis','InitialState.Epoch');
 init_epoch_control.Enable = true;
-init_epoch_control.MaxStep = 3000;
+init_epoch_control.MaxStep = 1000;
 init_epoch_control.Perturbation = 100;
 % Save long string for control parameter names
 init_control = 'InitialState.Target_Vector_Outgoing_Asymptote';
@@ -228,10 +228,11 @@ delta_ra_result.Enable = true;
 delta_ra_result.Tolerance = 0.05;
 rmag_result = dc.Results.GetResultByPaths('Burn_Raise_Periapsis','R_Mag');
 rmag_result.Enable = true;
-rmag_result.Tolerance = 1e5;
+%rmag_result.Tolerance = 1e5;
+rmag_result.Tolerance = 5e4;
 vmag_result = dc.Results.GetResultByPaths('Burn_Raise_Periapsis','V_Mag');
 vmag_result.Enable = true;
-vmag_result.Tolerance = 0.45;
+vmag_result.Tolerance = 0.2;
 % Set final DC and targeter properties and run modes
 dc.MaxIterations = 50;
 dc.EnableDisplayStatus = true;

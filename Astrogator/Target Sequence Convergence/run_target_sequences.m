@@ -35,7 +35,8 @@ for i = ts_ind
     %% Track convergence/divergence
     converged = false; % Keep track of convergence
     diverged = false; % Keep track of divergence
-        
+    repeat_error = false; % Keep track of multiple errors in a row
+    
     %% Keep track of results tolerances and achieved differences
     results_count = dc.Results.Count;
     % Find indices of enabled results
@@ -93,9 +94,14 @@ for i = ts_ind
                     break
                 end
             case "Encountered an Error"
-                diverged = true;
-                fprintf('Target Sequence %d, Iteration %d: ERROR\n\n',i+1,k)
-                break
+                if repeat_error
+                    diverged = true;
+                    fprintf('Target Sequence %d, Iteration %d: ERROR\n\n',i+1,k)
+                    break
+                else
+                    repeat_error = true;
+                    [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,IC_changed,nominal_vals,IC_scales);
+                end
         end
         if k >= kmax
             diverged = true;
@@ -128,7 +134,7 @@ for i = ts_ind
                 
             % Check whether all results improved. If so, apply the changes and skip over next analysis
             if all(percent_changes(k-1,:) < -div_threshold | diffs(k,:)<tolerances)
-                ts.ApplyProfileByName("Differential Corrector"); % Assumes diff corr. is named "Differential Corrector"
+                %ts.ApplyProfileByName("Differential Corrector"); % Assumes diff corr. is named "Differential Corrector"
 
             % If results did not all improve, more analysis needed:
             else
