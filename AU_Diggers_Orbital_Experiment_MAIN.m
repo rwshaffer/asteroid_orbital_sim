@@ -17,10 +17,11 @@ clear, clc
 
 %% User Inputs
 
-launch_dates = ["7 Jul 2025 07:00:00.000",...
-                "16 Jul 2025 07:00:00.000"];
+launch_dates = ["8 Jul 2025 07:00:00.000",...
+                "9 Jul 2025 07:00:00.000",...
+                "10 Jul 2025 07:00:00.000"];
 
-mining_durations = [482,500]; % Days
+mining_durations = [450,475,500]; % Days
 
 
 outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'

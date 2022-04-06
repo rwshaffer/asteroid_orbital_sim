@@ -6,7 +6,7 @@ kmax = 30; % Max number of times to run a given target sequence before giving up
 consecutive_divergences_allowed = 1; % Number of RunMCS iterations that any result can diverge for before making changes
 div_threshold = 0.5; % Percentage of improvement that a result must see in order to not be considered "diverging"
 tolerance_scale_factor = 2; % Factor by which to increase tolerance of a result
-max_tolerance_increases = 1; % Number of times it is allowed to increase a result's tolerance before moving on to
+max_tolerance_increases = 2; % Number of times it is allowed to increase a result's tolerance before moving on to
                              % more drastic measures
 num_IC_changes = 4; % Number of times a TS will have initial conditions randomized if step size increase fails
 
