@@ -17,12 +17,15 @@ clear, clc
 
 %% User Inputs
 
-launch_dates = ["8 Jul 2025 07:00:00.000",...
-                "9 Jul 2025 07:00:00.000",...
-                "10 Jul 2025 07:00:00.000"];
+% launch_dates = [...
+%                 "11 Jan 2025 07:00:00.000",...
+%                 "21 Jan 2025 07:00:00.000",...
+%                 "31 Jan 2025 07:00:00.000"];
 
-mining_durations = [450,475,500]; % Days
+% launch_dates = ["7 Jul 2025 07:00:00.000",...
+%                 "16 Jul 2025 07:00:00.000"];
 
+mining_durations = 170:80:730; % Days
 
 outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
 
@@ -155,12 +158,12 @@ for i = 1:length(launch_dates)
     
     switch outbound_traj
         case 'Direct'
-            [sat,diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date);
+            [sat,outbound_diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date);
         case 'EGA'
             fprintf("EGA modeling is incomplete, try again later.\n")
     end
     %% 6b. Assuming outbound traj. converged, build in the return trajectory
-    if diverged
+    if outbound_diverged
         fprintf('Outbound trajectory diverged! Moving to next outbound traj.:\n\n')
     else
         fprintf('Outbound trajectory converged! Building return trajectory(s):\n\n')
@@ -177,12 +180,12 @@ for i = 1:length(launch_dates)
         launch_date_table(traj_num) = string(launch_date);
         mining_dur_table(traj_num) = mining_duration;
         
-        if ~diverged
+        if ~outbound_diverged
             % Display info on return trjaectory about to be modeled
             fprintf("-----------------------------------------\n")
             fprintf("Return Trajectory %d: Mining Duration = %d days\n\n",j,mining_duration)
-            [sat,diverged] = AU_Diggers_Orbital_Experiment_R2E(sat,mining_duration);
-            if ~diverged
+            [sat,return_diverged] = AU_Diggers_Orbital_Experiment_R2E(sat,mining_duration);
+            if ~return_diverged
                 %% 7. Extracting data
                 fprintf("Return trajectory converged! SUMMARY: \n")
                 dataTable(:,traj_num) = extract_data(sat,mining_duration)';
