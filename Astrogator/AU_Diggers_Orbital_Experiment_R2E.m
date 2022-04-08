@@ -4,6 +4,7 @@ function [sat,diverged] = AU_Diggers_Orbital_Experiment_R2E(sat,mining_duration)
 ASTG = sat.Propagator;
 
 ASTG.Options.DrawTrajectoryIn3D = 0; % Turn off drawing trajectory while calculating
+ASTG.Options.SmartRunMOde = 'eVASmartRunModeOnlyChanged'; % Only run the new segments
 
 MCS = ASTG.MainSequence;
 % If this isn't the first return trajectory, we must remove the return target sequence already in the MCS
@@ -59,18 +60,16 @@ burn_earth_return.Maneuver.AttitudeControl.El0 = -6.793;
 burn_earth_return.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
 burn_earth_return.Maneuver.ThrustEfficiency = 0.204;
 burn_earth_return.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
-% Configure propagator and Epoch stopping condition
+% Configure propagator and duration stopping condition
 burn_propagator = burn_earth_return.Maneuver.Propagator;
 burn_propagator.PropagatorName = 'Heliocentric';
-burn_propagator.StoppingConditions.Add('Epoch');
-burn_propagator.StoppingConditions.Remove('Duration');
-epoch_stop = burn_propagator.StoppingConditions.Item('Epoch');
-epoch_stop.Properties.Trip = "11 Jul 2029 13:00:00.00";
+duration_stop = burn_propagator.StoppingConditions.Item('Duration');
+duration_stop.Properties.Trip = 3.672e7;
 % Set control parameters for target sequence
 burn_earth_return.EnableControlParameter('eVAControlManeuverFiniteAz0');
 burn_earth_return.EnableControlParameter('eVAControlManeuverFiniteEl0');
 burn_earth_return.EnableControlParameter('eVAControlManeuverFiniteThrustEfficiency');
-epoch_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
+duration_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
 % Configure results for target sequence - Return to Earth
 burn_earth_return.Results.Add('MultiBody/Delta Declination');
 burn_earth_return.Results.Item('Delta_Declination').CentralBodyName = 'Earth';
@@ -100,10 +99,10 @@ coast_duration_control.Enable = true;
 coast_duration_control.MaxStep = 86400;
 coast_duration_control.Perturbation = 60;
 
-final_epoch_control = dc.ControlParameters.GetControlByPaths('Burn_to_Earth_Return','FiniteMnvr.StoppingConditions.Epoch.TripValue');
-final_epoch_control.Enable = true;
-final_epoch_control.MaxStep = 86400;
-final_epoch_control.Perturbation = 60;
+final_duration_control = dc.ControlParameters.GetControlByPaths('Burn_to_Earth_Return','FiniteMnvr.StoppingConditions.Duration.TripValue');
+final_duration_control.Enable = true;
+final_duration_control.MaxStep = 86400;
+final_duration_control.Perturbation = 60;
 
 % Configure thrust efficiency control parameter - change max step & perturbation
 burn2_eff_control = dc.ControlParameters.GetControlByPaths('Burn_to_Earth_Return','FiniteMnvr.Thrusting.ThrustEfficiency');

@@ -24,6 +24,11 @@ for i = 0:MCS_items-1
     end
 end
 
+%% Hack: to speed up the sim, if the mode is set to "Run Only Changed", then only the last target sequence
+% needs to be run
+if ASTG.Options.SmartRunMOde == "eVASmartRunModeOnlyChanged"
+    ts_ind = [ts_ind(end)]; % Only the last index in the list of target sequences
+end
 
 %% Iterate through all target sequences to get them to converge
 for i = ts_ind

@@ -8,6 +8,8 @@ function [sat,diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date)
 ASTG = sat.Propagator;
 
 ASTG.Options.DrawTrajectoryIn3D = 0; % Turn off drawing trajectory while calculating
+ASTG.Options.SmartRunMOde = 'eVASmartRunModeEntireMCS'; % Run entire MCS
+
 
 MCS = ASTG.MainSequence;
 MCS.RemoveAll;
@@ -30,11 +32,16 @@ initstate.SetElementType('eVAElementTypeTargetVectorOutgoingAsymptote');
 initstate.OrbitEpoch = launch_date;
 initstate.Element.RadiusofPeriapsis = 6778.14;
 initstate.Element.C3Energy = 5.01067;
-%initstate.Element.C3Energy = 3;
 initstate.Element.RAOutgoing = 3.41985;
 initstate.Element.DeclinationOutgoing = -61.8156;
 initstate.Element.VelocityAzimuthPeriapsis = 0;
 initstate.Element.TrueAnomaly = 0;
+% If the launch date is between October and April, the declination must be multiplied by -1
+dateFormatString = 'd MMM yyyy H:mm:ss.SSS';
+launch_month = month(datetime(launch_date,'InputFormat',dateFormatString));
+if launch_month <= 4 || launch_month > 10
+    initstate.Element.DeclinationOutgoing = initstate.Element.DeclinationOutgoing * -1;
+end
 % Set initial S/C parameters
 initstate.SpacecraftParameters.DryMass = 224;
 initstate.FuelTank.FuelMass = 170;
@@ -280,18 +287,16 @@ burn_close_app.Maneuver.AttitudeControl.El0 = 7.187;
 burn_close_app.Maneuver.SetPropulsionMethod('eVAPropulsionMethodEngineModel','AU Diggers Engine');
 burn_close_app.Maneuver.ThrustEfficiency = 0.7;
 burn_close_app.Maneuver.ThrustEfficiencyMode = 'eVAThrustTypeAffectsAccelandMassFlow';
-% Configure propagator and stopping conditions - Use Epoch as a stopping condition
+% Configure propagator and stopping conditions - Use duration as a stopping condition
 burn_propagator = burn_close_app.Maneuver.Propagator;
 burn_propagator.PropagatorName = 'Heliocentric';
 burn_propagator.MaxPropagationTime = 86400*300;
-burn_propagator.StoppingConditions.Add('Epoch');
-burn_propagator.StoppingConditions.Remove('Duration');
-epoch_stop = burn_propagator.StoppingConditions.Item('Epoch');
-epoch_stop.Properties.Trip = "5 Nov 2026 07:43:00.000";
+duration_stop = burn_propagator.StoppingConditions.Item('Duration');
+duration_stop.Properties.Trip = 601600;
 % Set control parameters for target sequence
 burn_close_app.EnableControlParameter('eVAControlManeuverFiniteAz0');
 burn_close_app.EnableControlParameter('eVAControlManeuverFiniteEl0');
-epoch_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
+duration_stop.EnableControlParameter('eVAControlStoppingConditionTripValue');
 
 % Configure results for target sequence - Multibody and spherical elems for 1989 ML rendezvous
 burn_close_app.Results.Add('Keplerian Elems/Orbit_Period');
@@ -306,10 +311,10 @@ burn_close_app.Results.Add('Maneuver/DeltaV');
 %% Configure TS - Target Rendezvous
 % Get handle to differential corrector used in target sequence
 dc = ts_rdvs.Profiles.Item('Differential Corrector');
-% Configure final Epoch control parameter - change max step
-epoch_control = dc.ControlParameters.GetControlByPaths('Burn_Close_Approach','FiniteMnvr.StoppingConditions.Epoch.TripValue');
-epoch_control.Enable = true;
-epoch_control.MaxStep = 10000;
+% Configure duration control parameter - change max step
+duration_control = dc.ControlParameters.GetControlByPaths('Burn_Close_Approach','FiniteMnvr.StoppingConditions.Duration.TripValue');
+duration_control.Enable = true;
+duration_control.MaxStep = 10000;
 % Enable impulsive maneuver controls (no special configurations)
 impulsive_string = 'ImpulsiveMnvr.Pointing.Spherical';
 dc.ControlParameters.GetControlByPaths('Impulsive_Burn',sprintf('%s.Azimuth',impulsive_string)).Enable = true;
