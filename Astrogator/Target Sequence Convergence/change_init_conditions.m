@@ -23,13 +23,18 @@ if IC_changed == 0
         if segment.Type == "eVASegmentTypeManeuver"
             if segment.ManeuverType == "eVAManeuverTypeImpulsive"
                 imp_mnvr = segment.Maneuver;
-                if imp_mnvr.AttitudeControl.CoordType == "eVASphericalImpDeltaV"
+                try
+                    imp_coords = imp_mnvr.AttitudeControl.CoordType;
+                catch
+                    imp_coords = "";
+                end
+                if imp_coords == "eVASphericalImpDeltaV"
                     % Impulsive burn spherical magnitude will be varied
                     ii = ii + 1;
                     nominal_vals(ii) = imp_mnvr.AttitudeControl.Magnitude;
                     IC_scales(ii) = 0.5; % Allow for varying magnitude by +- 50%
                     
-                elseif imp_mnvr.AttitudeControl.CoordType == "eVACartesianImpDeltaV"
+                elseif imp_coords == "eVACartesianImpDeltaV"
                     % Vary impulsive burn Cartesian coordinates
                     ii = ii + 1;
                     nominal_vals(ii) = imp_mnvr.AttitudeControl.X;
@@ -111,12 +116,17 @@ for j = 0:num_segments-1
     if segment.Type == "eVASegmentTypeManeuver"
         if segment.ManeuverType == "eVAManeuverTypeImpulsive"
             imp_mnvr = segment.Maneuver;
-            if imp_mnvr.AttitudeControl.CoordType == "eVASphericalImpDeltaV"
+            try
+                imp_coords = imp_mnvr.AttitudeControl.CoordType;
+            catch
+                imp_coords = "";
+            end 
+            if imp_coords == "eVASphericalImpDeltaV"
                 % Impulsive burn spherical magnitude will be varied
                 ii = ii + 1;
                 imp_mnvr.AttitudeControl.Magnitude = new_vals(ii);
 
-            elseif imp_mnvr.AttitudeControl.CoordType == "eVACartesianImpDeltaV"
+            elseif imp_coords == "eVACartesianImpDeltaV"
                 % Vary impulsive burn Cartesian coordinates
                 ii = ii + 1;
                 imp_mnvr.AttitudeControl.X = new_vals(ii);

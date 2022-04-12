@@ -129,6 +129,7 @@ for i = item_iters
                     break
                 else
                     repeat_error = true;
+                    [ts,dc] = remove_thrust_var(ts,dc);
                     [ts,dc,nominal_vals,IC_scales] = change_init_conditions(ts,dc,IC_changed,nominal_vals,IC_scales);
                 end
         end
