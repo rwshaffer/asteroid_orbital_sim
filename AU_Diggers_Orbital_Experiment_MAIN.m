@@ -22,12 +22,12 @@ clear, clc
 %                 "21 Jan 2025 07:00:00.000",...
 %                 "31 Jan 2025 07:00:00.000"];
 
-% launch_dates = ["7 Jul 2025 07:00:00.000",...
-%                 "16 Jul 2025 07:00:00.000"];
+launch_dates = ["7 Jul 2025 07:00:00.000",...
+                "16 Jul 2025 07:00:00.000"]; 
 
-mining_durations = 170:80:730; % Days
+mining_durations = [482]; % Days
 
-outbound_traj = 'Direct'; % Options are 'EGA' or 'Direct'
+outbound_traj = 'EGA'; % Options are 'EGA' or 'Direct'
 
 asteroid_uncertainty = 0; % Percent orbit uncertainty to apply to all elements uniformly
 
@@ -46,7 +46,6 @@ root = uiapp.Personality2;
 %Create scenario
 root.NewScenario('Orbital_Sim')
 %%  4. Populate simulation objects: Earth, asteroid, electric propulsion engine
-
 %% Connect to component browser and folder with engine models
 comp_brows = root.CurrentScenario.ComponentDirectory.GetComponents('eComponentAstrogator');
 engine_models = comp_brows.GetFolder('Engine Models');
@@ -136,8 +135,8 @@ vncML.TrajectoryAxesType = 'eCrdnTrajectoryAxesVVLH';
 %% --------------------------------------------------------------------- %%
 % Set up results table
 numTrajectories = length(launch_dates) * length(mining_durations);
-numOutputs = 7; % Hard-coded, based on extract_sat.m
-dataTable = zeros(numOutputs,numTrajectories);
+numOutputs = 8; % Hard-coded, based on extract_sat.m
+dataTable = string(zeros(numOutputs,numTrajectories));
 
 traj_num = 0; % Keep track of all trajectories (total number of full trajectories modeled)
 
@@ -152,15 +151,20 @@ for i = 1:length(launch_dates)
     %% 6a. Build Mission Control Sequence for satellite outbound traj. based on user inputs
     launch_date = launch_dates(i);
     
-    % Display info on outbound trajectory about to be modeled
-    fprintf("\n\n--------------------------------------------------------\n")
-    fprintf("Outbound Trajectory %d: Launch Date = %s\n\n",i,launch_date)
     
     switch outbound_traj
         case 'Direct'
+            % Display info on outbound trajectory about to be modeled
+            fprintf("\n\n--------------------------------------------------------\n")
+            fprintf("Outbound Trajectory %d: Launch Date = %s\n\n",i,launch_date)
+            % Build/run direct outbound trajectory MCS
             [sat,outbound_diverged] = escape_to_earth_plane_MCS(ML,sat,launch_date);
         case 'EGA'
-            fprintf("EGA modeling is incomplete, try again later.\n")
+            % Display info on outbound trajectory about to be modeled
+            fprintf("\n\n--------------------------------------------------------\n")
+            fprintf("Outbound Trajectory %d: EGA Date = %s\n\n",i,launch_date)
+            % Build/run EGA outbound trajectory MCS
+            [sat,outbound_diverged] = grav_assist_MCS(ML,sat,launch_date);
     end
     %% 6b. Assuming outbound traj. converged, build in the return trajectory
     if outbound_diverged
@@ -188,7 +192,7 @@ for i = 1:length(launch_dates)
             if ~return_diverged
                 %% 7. Extracting data
                 fprintf("Return trajectory converged! SUMMARY: \n")
-                dataTable(:,traj_num) = extract_data(sat,mining_duration)';
+                dataTable(:,traj_num) = extract_data(sat,mining_duration,outbound_traj,Isp)';
             else
                 dataTable(:,traj_num) = nan;
             end
@@ -214,11 +218,18 @@ OutboundImpDV = dataTable(2,:)';
 ReturnDV = dataTable(3,:)';
 MaxThrust = dataTable(4,:)';
 C3Energy = dataTable(5,:)';
-OutboundTimeOfFlight = dataTable(6,:)';
-ReturnTimeOfFlight = dataTable(7,:)';
+EarthEscapeDate = dataTable(6,:)';
+OutboundTimeOfFlight = dataTable(7,:)';
+ReturnTimeOfFlight = dataTable(8,:)';
 % Consolidate inputs and outputs into a table and display it
-outputTable = table(InputLaunchDates,InputMiningDurations,InputTrajType,InputUncertainty,...
-    OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,OutboundTimeOfFlight,ReturnTimeOfFlight);
+switch outbound_traj
+    case "Direct"
+        outputTable = table(InputLaunchDates,InputMiningDurations,InputTrajType,InputUncertainty,...
+            OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,InputLaunchDates,OutboundTimeOfFlight,ReturnTimeOfFlight);
+    case "EGA"
+        outputTable = table(EarthEscapeDate,InputMiningDurations,InputTrajType,InputUncertainty,...
+            OutboundFinDV,OutboundImpDV,ReturnDV,MaxThrust,C3Energy,InputLaunchDates,OutboundTimeOfFlight,ReturnTimeOfFlight);
+end
 disp(outputTable)
 % Write outputs to Excel
 %writetable(outputTable);

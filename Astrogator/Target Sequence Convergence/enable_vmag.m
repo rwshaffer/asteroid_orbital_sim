@@ -10,6 +10,12 @@ for j = 0:results_count-1
         
         disabled_vmag = false;
         fprintf("Enabling Result %d, V Mag\n\n",j)
+        
+    elseif dc.Results.Item(j).Name == "C3 Energy" && ~dc.Results.Item(j).Enable
+        dc.Results.Item(j).Enable = 1;
+        
+        disabled_vmag = false;
+        fprintf("Enabling Result %d, C3 Energy\n\n",j)
     end
 end
 

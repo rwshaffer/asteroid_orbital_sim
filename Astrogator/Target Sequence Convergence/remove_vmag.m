@@ -1,6 +1,6 @@
 function [ts,dc,disabled_vmag] = remove_vmag(ts,dc)
 
-%% Find and disable any V Mag results in a target sequence
+%% Find and disable any V Mag or C3 results in a target sequence
 
 results_count = dc.Results.Count;
 
@@ -10,6 +10,14 @@ for j = 0:results_count-1
         
         disabled_vmag = true;
         fprintf("Disabling Result %d, V Mag\n\n",j)
+        
+    elseif dc.Results.Item(j).Name == "C3 Energy" && dc.Results.Item(j).Enable
+        dc.Results.Item(j).Enable = 0;
+        
+        disabled_vmag = true;
+        fprintf("Disabling Result %d, C3 Energy\n\n",j)
+        
+        
     end
 end
 

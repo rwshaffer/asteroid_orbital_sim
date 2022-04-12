@@ -1,5 +1,9 @@
-function [sat,diverged] = run_target_sequences(sat)
+function [sat,diverged] = run_target_sequences(sat,traj)
 
+%% Handle optional traj input
+if nargin < 2
+    traj = "Direct";
+end
 
 %% Convergence parameters to play with
 kmax = 30; % Max number of times to run a given target sequence before giving up
@@ -10,31 +14,51 @@ max_tolerance_increases = 2; % Number of times it is allowed to increase a resul
                              % more drastic measures
 num_IC_changes = 4; % Number of times a TS will have initial conditions randomized if step size increase fails
 
-                             
+
 %% Connection to STK
 ASTG = sat.Propagator;
 
 %% Identify all target sequences in the MCS
 ts_ind = []; % List of indices of target sequences in the MCS
 MCS_items = ASTG.MainSequence.Count; % Number of main segments in the MCS
+bs = false; % Presence of a backwards sequence
 for i = 0:MCS_items-1
     % Check if current segment is a target sequence
     if ASTG.MainSequence.Item(i).Type == "eVASegmentTypeTargetSequence"
         ts_ind = [ts_ind i]; % Store index of target sequence
+    % Check if current segment is a backwards sequence
+    elseif ASTG.MainSequence.Item(i).Type == "eVASegmentTypeBackwardSequence"
+        bs_ind = i;
     end
 end
 
 %% Hack: to speed up the sim, if the mode is set to "Run Only Changed", then only the last target sequence
 % needs to be run
-if ASTG.Options.SmartRunMOde == "eVASmartRunModeOnlyChanged"
+if ASTG.Options.SmartRunMOde == "eVASmartRunModeOnlyChanged" && traj ~= "EGA"
     ts_ind = [ts_ind(end)]; % Only the last index in the list of target sequences
 end
 
+%% Determine the MCS items to iterate through
+if traj == "EGA"
+    item_iters = bs_ind;
+else
+    item_iters = ts_ind;
+end
+
 %% Iterate through all target sequences to get them to converge
-for i = ts_ind
+for i = item_iters
     %% Setup STK objects
-    ts = ASTG.MainSequence.Item(i);
-    dc = ts.Profiles.Item(0); % Assumes each target sequence only has one differential corrector
+    if traj == "EGA"
+        % If there is a backwards sequence, the target sequence is inside it
+        ts = ASTG.MainSequence.Item(i).Segments.Item(0);
+        dc = ts.Profiles.Item(0); % Assumes each target sequence only has one differential corrector
+        [ts,dc,disabled_vmag] = remove_vmag(ts,dc);
+    else
+        ts = ASTG.MainSequence.Item(i);
+        dc = ts.Profiles.Item(0); % Assumes each target sequence only has one differential corrector
+        disabled_vmag = false;
+    end
+    %dc = ts.Profiles.Item(0); % Assumes each target sequence only has one differential corrector
     ts.Action = 'eVATargetSeqActionRunActiveProfiles'; % Allow current target sequence to be active
     
     %% Track convergence/divergence
@@ -72,7 +96,7 @@ for i = ts_ind
     nominal_vals = [];
     IC_scales = [];
     
-    disabled_vmag = false;
+    %disabled_vmag = false;
     vmag_index = nan;
     for j = 1:num_results
         if dc.Results.Item(enabled_results(j)).Name == "V Mag"
@@ -156,7 +180,7 @@ for i = ts_ind
                 %% Handle corrective actions to allow the Target Sequence to converge
                 if any(action_needed) 
                     
-                    % Check whether V Mag is an enabled result and is converged - if so, disable it
+                    % Check whether V Mag/C3 is an enabled result and is converged - if so, disable it
                     if ~isnan(vmag_index) && ~action_needed(vmag_index) && dc.Results.Item(enabled_results(vmag_index)).Enable
                         [ts,dc,disabled_vmag] = remove_vmag(ts,dc);
                     
