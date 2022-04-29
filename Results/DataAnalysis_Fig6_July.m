@@ -80,7 +80,7 @@ figure(1)
 k = 1;
 legendEntries = string([]);
 
-for i = 1:length(mineDurs)
+for i = 10:15
     mineLaunchDates = data.LaunchDate(data.MiningDuration == mineDurs(i));    
     mineTOFs = zeros(length(mineLaunchDates),3);    
 
@@ -121,6 +121,6 @@ end
 datetick('x','dd-mmm-YYYY')
 xlabel('Launch Date')
 ylabel('ToF (days)')
-title('Launch Date vs. Time of Flight - July Launch')
+title('Launch Date vs. Total Time of Flight - July Launch')
 legend(legendEntries,'Location','bestoutside');
 

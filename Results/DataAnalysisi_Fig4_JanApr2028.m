@@ -30,10 +30,10 @@ opts = delimitedTextImportOptions('VariableNames',varNames,...
 data = readtable(filename,opts);
 
 % datatime variables
-data.LaunchDate = datetime(data.LaunchDate,'InputFormat','dd MMM yyyy HH:mm:ss','Format','dd/MM/yyyy');
-data.EgaDate = datetime(data.EgaDate,'InputFormat','dd MMM yyyy HH:mm:ss','Format','dd/MM/yyyy');
-data.AsteroidDepartureDate = datetime(data.AsteroidDepartureDate,'InputFormat','dd MMM yyyy HH:mm:ss','Format','dd/MM/yyyy');
-data.EarthArrivalDate = datetime(data.EarthArrivalDate,'InputFormat','dd MMM yyyy HH:mm:ss','Format','dd/MM/yyyy');
+data.LaunchDate = datetime(data.LaunchDate,'InputFormat','dd MMM yyyy HH:mm:ss');
+data.EgaDate = datetime(data.EgaDate,'InputFormat','dd MMM yyyy HH:mm:ss');
+data.AsteroidDepartureDate = datetime(data.AsteroidDepartureDate,'InputFormat','dd MMM yyyy HH:mm:ss');
+data.EarthArrivalDate = datetime(data.EarthArrivalDate,'InputFormat','dd MMM yyyy HH:mm:ss');
 
 data.AsteroidDepartureDate = dateshift(data.AsteroidDepartureDate,'start','day');
 
@@ -74,87 +74,86 @@ data.TotDV = data.TotDV(sortIdx);
 data.LaunchDate = data.LaunchDate(sortIdx);
 data.EarthArrivalDate = data.EarthArrivalDate(sortIdx);
 
+data.TotTOF = data.RetTOF+data.OutTOF;
+
 Z00UncAllLaunch = (data.AsteroidUncertainty == 0 );
 N01UncAllLaunch = (data.AsteroidUncertainty == -0.1 );
 P01UncAllLaunch = (data.AsteroidUncertainty == 0.1 );
-% 
+
 % figure(1)
-% plot(data.AsteroidDepartureDate(Z00UncAllLaunch),data.RetDV(Z00UncAllLaunch),'bo')
+% % plot(data.AsteroidDepartureDate(Z00UncAllLaunch),data.OutTOF(Z00UncAllLaunch),'bo')
 % hold on
-% plot(data.AsteroidDepartureDate(Z00UncAllLaunch),data.TotDV(Z00UncAllLaunch),'ro')
+% plot(data.AsteroidDepartureDate(Z00UncAllLaunch),data.RetTOF(Z00UncAllLaunch),'ro')
+% % plot(data.AsteroidDepartureDate(Z00UncAllLaunch),data.TotTOF(Z00UncAllLaunch),'go')
 % xlabel('Asteroid Departure Date')
-% ylabel('\DeltaV (km/s)')
-% title('Asteroid Departure Date vs. \DeltaV Ast. Unc. = 0.00')
+% ylabel('ToF (days)')
+% title('Asteroid Departure Date vs. TOF Ast. Unc. = 0.00')
 % 
 % figure(2)
-% plot(data.AsteroidDepartureDate(N01UncAllLaunch),data.RetDV(N01UncAllLaunch),'bo')
+% % plot(data.AsteroidDepartureDate(N01UncAllLaunch),data.OutTOF(N01UncAllLaunch),'bo')
 % hold on
-% plot(data.AsteroidDepartureDate(N01UncAllLaunch),data.TotDV(N01UncAllLaunch),'ro')
+% plot(data.AsteroidDepartureDate(N01UncAllLaunch),data.RetTOF(N01UncAllLaunch),'ro')
+% % plot(data.AsteroidDepartureDate(N01UncAllLaunch),data.TotTOF(N01UncAllLaunch),'go')
 % xlabel('Asteroid Departure Date')
-% ylabel('\DeltaV (km/s)')
-% title('Asteroid Departure Date vs. \DeltaV Ast. Unc. = -0.1')
+% ylabel('ToF (days)')
+% title('Asteroid Departure Date vs. TOF Ast. Unc. = -0.1')
 % 
 % figure(3)
-% plot(data.AsteroidDepartureDate(P01UncAllLaunch),data.RetDV(P01UncAllLaunch),'bo')
+% % plot(data.AsteroidDepartureDate(P01UncAllLaunch),data.OutTOF(P01UncAllLaunch),'bo')
 % hold on
-% plot(data.AsteroidDepartureDate(P01UncAllLaunch),data.TotDV(P01UncAllLaunch),'ro')
+% plot(data.AsteroidDepartureDate(P01UncAllLaunch),data.RetTOF(P01UncAllLaunch),'ro')
+% % plot(data.AsteroidDepartureDate(P01UncAllLaunch),data.TotTOF(P01UncAllLaunch),'go')
 % xlabel('Asteroid Departure Date')
-% ylabel('\DeltaV (km/s)')
-% title('Asteroid Departure Date vs. \DeltaV Ast. Unc. = 0.1')
+% ylabel('ToF (days)')
+% title('Asteroid Departure Date vs. TOF Ast. Unc. = 0.1')
 
+%% new
 
-figure(1)
-DepDates = unique(data.AsteroidDepartureDate(data.AsteroidDepartureDate >= datetime("01-Jan-2028 00:00:00") & data.AsteroidDepartureDate <= datetime("01-Apr-2028 23:59:59")));   
-RetDVs = zeros(length(DepDates),3);    
-
+DepDates = unique(data.AsteroidDepartureDate);    
+RetTOFs = zeros(length(DepDates),3);    
 
 for j = 1:length(DepDates)
 
-    if ~isempty(data.RetDV(data.AsteroidUncertainty == 0     & data.AsteroidDepartureDate == DepDates(j)  ))
-        RetDVs(j,1) = max(data.RetDV(data.AsteroidUncertainty == 0   & data.AsteroidDepartureDate == DepDates(j)  )); 
+    if ~isempty(data.RetTOF(data.AsteroidUncertainty == 0     &  data.AsteroidDepartureDate == DepDates(j)  ))
+        RetTOFs(j,1) = max(data.RetTOF(data.AsteroidUncertainty == 0     &  data.AsteroidDepartureDate == DepDates(j)  )); 
     else
-        RetDVs(j,1) = NaN;
+        RetTOFs(j,1) = NaN;
     end
 
-    if ~isempty(data.RetDV(data.AsteroidUncertainty == 0.1    & data.AsteroidDepartureDate == DepDates(j)  ))
-        RetDVs(j,2) = max(data.RetDV(data.AsteroidUncertainty == 0.1     & data.AsteroidDepartureDate == DepDates(j)  ));  
+    if ~isempty(data.RetTOF(data.AsteroidUncertainty == 0.1     &  data.AsteroidDepartureDate == DepDates(j)  ))
+        RetTOFs(j,2) = max(data.RetTOF(data.AsteroidUncertainty == 0.1     &  data.AsteroidDepartureDate == DepDates(j)  ));  
     else
-        RetDVs(j,2) = NaN;
+        RetTOFs(j,2) = NaN;
     end
 
-    if ~isempty(data.RetDV(data.AsteroidUncertainty == -0.1   & data.AsteroidDepartureDate == DepDates(j)  ))
-        RetDVs(j,3) = max(data.RetDV(data.AsteroidUncertainty == -0.1    & data.AsteroidDepartureDate == DepDates(j)  ));  
+    if ~isempty(data.RetTOF(data.AsteroidUncertainty == -0.1     &  data.AsteroidDepartureDate == DepDates(j)  ))
+        RetTOFs(j,3) = max(data.RetTOF(data.AsteroidUncertainty == -0.1     &  data.AsteroidDepartureDate == DepDates(j)  ));  
     else
-        RetDVs(j,3) = NaN;
+        RetTOFs(j,3) = NaN;
     end
-    
-        
-    RetDVs(j,:) = sort(RetDVs(j,:));
+
+    RetTOFs(j,:) = sort(RetTOFs(j,:));
 end
 
+hold on
+grid on
+
 x = datenum(DepDates);
-y = RetDVs(:,2);
+y = RetTOFs(:,2);
 x = x( ~isnan(y));
 y = y( ~isnan(y));
 B = [x(:) ones(size(x(:)))] \ y(:);
 yfit = [x(:) ones(size(x(:)))]  * B;
 
-
-hold on
-grid on
-yneg = abs(RetDVs(:,2)-RetDVs(:,1));
-ypos = abs(RetDVs(:,3)-RetDVs(:,2));
+yneg = abs(RetTOFs(:,2)-RetTOFs(:,1));
+ypos = abs(RetTOFs(:,3)-RetTOFs(:,2));
 xneg = [];
 xpos = [];
-errorbar(datenum(DepDates),RetDVs(:,2),yneg,ypos,xneg,xpos,'bo')
-datetick('x','mmm YYYY')
-xlabel('Departure Date')
-ylabel('\DeltaV (km/s)')
-title('Departure Date vs. \DeltaV - Direct Return')
+errorbar(datenum(DepDates),RetTOFs(:,2),yneg,ypos,xneg,xpos,'bo')
 hold on 
 plot(x, yfit, '-r')
 
-
-
-
-
+datetick('x','mmm YYYY')
+xlabel('Asteroid Departure Date')
+ylabel('ToF (days)')
+title('Departure Date vs. Time of Flight')
